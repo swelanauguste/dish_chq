@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% load subtract %}
+
+{% load humanize %}
+
+{% block head_title %}
+{{object}}
+{% endblock head_title %}
+
+{% block content %}
+<div class="p-5">
+    <div class="col-lg mx-auto shadow p-5 rounded-4">
+        <h1>{{object}} | phone | address | address1</h1>
+        <hr>
+        <table class="mt-3 table table-hover table-bordered">
+            <thead>
+                <tr class="table-dark fs-4">
+                    <th scope="col">#</th>
+                    <th scope="col">Date Debited</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Cheque Amount</th>
+                    <th scope="col">Cheque Date</th>
+                    <th scope="col">Cheque No.</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Receipt No.</th>
+                    <th scope="col">Ministry</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ob in all_cheques %}
+                <tr {% if ob.cheque_status == 'P' %}
+                    class="table-success"
+                    {% else %}
+                    class="table-warning"
+                    {% endif %}>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{ob.date_debited}}</td>
+                    <td><a class="text-dark" href="{% url 'owner-detail' ob.owner.pk %}">{{ob.owner}}</a></td>
+                    <td>{{ob.returned|title}}</td>
+                    <td>${{ob.chq_amount|intcomma}}</td>
+                    <td>{{ob.cheque_date}}</td>
+                    <td><a class="text-dark" href="">{{ob.cheque_no}}</a></td>
+                    {% if ob.cheque_status == 'P' %}
+                    <td><a class="btn btn-sm btn-outline-dark"
+                            href="{% url 'cheque-returned' ob.pk %}">{{ob.cheque_status}}</a>
+                    </td>
+                    {% else %}
+                    <td><a class="btn btn-sm btn-outline-dark"
+                            href="{% url 'cheque-paid' ob.pk %}">{{ob.cheque_status}}</a>
+                    </td>
+                    {% endif %}
+                    <td>{{ob.receipt_no}}</td>
+                    <td><a class="text-dark" href="">{{ob.ministry|upper}}</a></td>
+                    <td>
+                        <a href=""><span class="material-symbols-outlined fs-3">
+                        info
+                        </span>
+                    </a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+        <div class="d-flex justify-content-end">
+            <div class="btn btn-lg btn-outline-dark shadow rounded-4">
+                <span>Total Cheques: </span>
+                <span>${{total_amount}}</span>
+            </div>
+            <div
+                class="btn btn-lg btn-outline-dark shadow rounded-4 mx-lg-3">
+                <span>Total Payments: </span>
+                <span>${{paid_cheque_total_amount}}</span>
+            </div>
+            <div class="btn btn-lg btn-outline-dark shadow rounded-4">
+                <span>Balance: </span>
+                <span>${{paid_cheque_total_amount|subtract:total_amount|intcomma}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $("#id_owner").select2();
+    $("#id_ministry").select2();
+
+</script>
+{% endblock scripts %}

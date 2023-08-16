@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% load subtract %}
+
+{% load humanize %}
+
+{% block head_title %}
+{{object}}
+{% endblock head_title %}
+
+{% block content %}
+<div class="p-5">
+    <div class="col-lg mx-auto shadow p-5 rounded-4">
+        <h1>{{object}} | phone | address | address1</h1>
+        <hr>
+        <div class="px-5">
+            <span class="text-muted">Date debited</span>
+            <br>
+            <span class="px-2">{{object.date_debited}}</span>
+            <br>
+            <span class="text-muted">Owner</span>
+            <br>
+            <span class="px-2">{{object.owner}}</span>
+            <br><br>
+            <span class="text-muted">Date debited</span>
+            <br>
+            <p>{{object.returned}}</p>
+            <br><br>
+            <p>{{object.chq_amount}}</p>
+            <p>{{object.journal}}</p>
+            <p>{{object.cheque_date}}</p>
+            <p>{{object.cheque_no}}</p>
+            <p>{{object.cheque_status}}</p>
+            <p>{{object.ministry}}</p>
+            <p>{{object.receipt_no}}</p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $("#id_owner").select2();
+    $("#id_ministry").select2();
+
+</script>
+{% endblock scripts %}

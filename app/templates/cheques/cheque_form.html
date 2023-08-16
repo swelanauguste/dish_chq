@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+Add Cheque
+{% endblock head_title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="col-lg-6 mx-auto shadow p-5 rounded-4">
+        <h1>New</h1>
+        <hr>
+        <form action=""
+            method="post">
+            {% csrf_token %}
+            {{form|crispy}}
+            <div class="my-3 text-end">
+                <button class="btn btn-lg btn-outline-dark"
+                    type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $("#id_owner").select2();
+    $("#id_ministry").select2();
+
+</script>
+{% endblock scripts %}

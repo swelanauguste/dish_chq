@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% load subtract %}
+
+{% block head_title %}
+Cheques
+{% endblock head_title %}
+
+
+{% block content %}
+
+<div class="p-5">
+<div class="d-flex  justify-content-center p-5">
+        <div class="mx-5 pt-2">
+            <a title="add cheque" class="text-decoration-none text-dark" href="{% url 'owner-create' %}">
+                <span class="material-symbols-outlined fs-1">
+                    add_circle
+                </span>
+            </a>
+    </div>
+    <div class="col-lg-6">
+        <form action=""
+            method="get">
+            <input type="search"
+                class="form-control form-control-lg border border-3 rounded-pill"
+                autofocus="autofocus"
+                placeholder="Search"
+                name="owners"
+                id="cheque_id_id">
+        </form>
+    </div>
+    <div class="mx-3 pt-2">
+        <a class="small text-muted" href="/">reset</a>
+    </div>
+   
+</div>
+   
+    <table class="mt-3 table table-hover table-bordered">
+        <thead>
+            <tr class="table-dark fs-4">
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ob in object_list %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td><a class="text-dark" href="{% url 'owner-detail' ob.pk %}">{{ob.name}}</a></td>
+                <td>{{ob.email|title}}</td>
+                <td>{{ob.phone}}</td>
+                <td>{{ob.address}} {{obb.address1}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
