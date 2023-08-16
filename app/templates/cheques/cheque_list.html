@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% load subtract %}
+
+{% block head_title %}
+
+{% endblock head_title %}
+
+
+{% block content %}
+<p title="paid"
+    style="position: fixed;top: 1%; left:1%;"
+    class="h3 border rounded-4 p-2 bg-warning">
+    ${{total_amount|intcomma}}</p>
+<p title="un-paid"
+    style="position: fixed;top: 1%; right:1%;"
+    class="h3 border rounded-4 p-2 bg-info">
+    ${{paid_cheque_total_amount|intcomma}}</p>
+<p title="un-paid"
+    style="position: fixed;top: 1%; right:50%;"
+    class="h3 border rounded-4 p-2 bg-primary">
+    ${{paid_cheque_total_amount|subtract:total_amount|intcomma}}</p>
+<div class="container p-5">
+    <div class="col-lg-5 mx-auto py-5">
+        <form action=""
+            method="get">
+            <input type="search"
+                class="form-control form-control-lg border border-3 rounded-pill"
+                autofocus="autofocus"
+                placeholder="Search"
+                name="cheques"
+                id="cheque_id_id">
+        </form>
+    </div>
+
+
+
+
+    <table class="mt-5 table small table-sm table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date Debited</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Reason</th>
+                <th scope="col">Cheque Amount</th>
+                <th scope="col">Cheque Date</th>
+                <th scope="col">Cheque No.</th>
+                <th scope="col">Status</th>
+                <th scope="col">Receipt No.</th>
+                <th scope="col">Ministry</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ob in object_list %}
+            <tr {% if ob.cheque_status == 'P' %} class="table-success" {% else %} class="table-warning" {% endif %}>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{ob.date_debited}}</td>
+                <td>{{ob.owner}}</td>
+                <td>{{ob.returned|title}}</td>
+                <td>${{ob.chq_amount|intcomma}}</td>
+                <td>{{ob.cheque_date}}</td>
+                <td>{{ob.cheque_no}}</td>
+                {% if ob.cheque_status == 'P' %}
+                <td><a class="btn btn-sm btn-outline-dark"
+                    href="{% url 'cheque-returned' ob.pk %}">{{ob.cheque_status}}</a></td>
+                {% else %}
+                <td><a class="btn btn-sm btn-outline-dark"
+                    href="{% url 'cheque-paid' ob.pk %}">{{ob.cheque_status}}</a></td>
+                {% endif %}
+                <td>{{ob.receipt_no}}</td>
+                <td>{{ob.ministry|upper}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
