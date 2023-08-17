@@ -28,10 +28,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "django.contrib.humanize",
     "crispy_forms",
     "crispy_bootstrap5",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "request",
     "cheques",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -112,11 +118,71 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+MEDIA_URL = "/mediafiles/"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+SITE_ID = 1
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_FILE_PATH = "emails"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
+    # EMAIL_HOST = "mail.govt.lc"
+    EMAIL_HOST_USER = os.environ.get("EMAIL")
+    EMAIL_HOST_PASSWORD = os.environ.get("PASSWORD")
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
+
+######################
+# Authentication settings for allauth
+######################
+
+AUTH_USER_MODEL = "users.User"
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login/"
+
+LOGIN_REDIRECT_URL = "cheque-list"
+LOGIN_URL = "/accounts/login/"
+LOGOUT_URL = "/accounts/login/"
+
+
+REQUEST_IGNORE_PATHS = (r"^admin/",)
+
+REQUEST_PLUGINS = (
+    "request.plugins.TrafficInformation",
+    "request.plugins.LatestRequests",
+    "request.plugins.TopPaths",
+    "request.plugins.TopErrorPaths",
+    "request.plugins.TopReferrers",
+    "request.plugins.TopSearchPhrases",
+    "request.plugins.TopBrowsers",
+    "request.plugins.ActiveUsers",
+)

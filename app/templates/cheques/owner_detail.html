@@ -13,7 +13,8 @@
 {% block content %}
 <div class="p-5">
     <div class="col-lg mx-auto shadow p-5 rounded-4">
-        <h1>{{object}} | phone | address | address1</h1>
+        <h1>{{object}}</h1>
+        <h3>{{object.phone}} | {{object.address}} | {{object.address1}}</h3>
         <hr>
         <table class="mt-3 table table-hover table-bordered">
             <thead>
@@ -28,7 +29,6 @@
                     <th scope="col">Status</th>
                     <th scope="col">Receipt No.</th>
                     <th scope="col">Ministry</th>
-                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -62,9 +62,14 @@
                         </span>
                     </a></td>
                 </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center">No Cheques</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <br><br><br>
         <hr>
         <div class="d-flex justify-content-end">
             <div class="btn btn-lg btn-outline-dark shadow rounded-4">

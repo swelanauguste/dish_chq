@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Sum
-
+from django.shortcuts import reverse
 
 class Owner(models.Model):
     """
@@ -30,7 +30,7 @@ class Returned(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name.title()
+        return f"{self.name.upper()}"
 
 
 class Ministry(models.Model):
@@ -48,7 +48,7 @@ class Ministry(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.name.title()
+        return self.name.upper()
 
 
 class Cheque(models.Model):
@@ -79,6 +79,9 @@ class Cheque(models.Model):
 
     class Meta:
         ordering = ("date_debited",)
+
+    def get_absolute_url(self):
+        return reverse("cheque-detail", kwargs={"pk": self.pk})
 
     def __str__(self):
         return f"{self.owner} - ${self.chq_amount} - {self.cheque_status}"

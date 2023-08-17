@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block head_title %}
+Delete
+{% endblock head_title %}
+
+{% block content %}
+<div class="container shadow rounded-4 p-5 col-lg-4 mx-auto">
+    <form method="post">{% csrf_token %}
+        <p class="text-center fs-5">Are you sure you want to delete
+            "{{ object.cheque_no }}"?</p>
+        <hr>
+        {{ form }}
+        <div class="text-end">
+            <input class="btn btn-lg btn-outline-danger"
+                type="submit"
+                value="Confirm">
+        </div>
+    </form>
+</div>
+{% endblock content %}

@@ -1,7 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q, Sum
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import (
     CreateView,
@@ -13,21 +15,24 @@ from django.views.generic import (
 
 from .forms import ChequeForm
 from .models import Cheque, Owner
-from django.http import HttpResponseRedirect
 
 
-
-class OwnerCreateView(CreateView):
+class OwnerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Owner
     fields = "__all__"
+    success_url = "/"
+    success_message = "%(name)s was created"
 
 
-class OwnerUpdateView(UpdateView):
+class OwnerUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Owner
     fields = "__all__"
+    success_url = "/"
+    success_message = "%(name)s was updated"
+    template_name_suffix = "_update_form"
 
 
-class OwnerDetailView(DetailView):
+class OwnerDetailView(LoginRequiredMixin, DetailView):
     model = Owner
 
     def get_context_data(self, **kwargs):
@@ -44,7 +49,7 @@ class OwnerDetailView(DetailView):
         return context
 
 
-class OwnerListView(ListView):
+class OwnerListView(LoginRequiredMixin, ListView):
     model = Owner
 
     def get_queryset(self):
@@ -62,28 +67,43 @@ class OwnerListView(ListView):
             return Owner.objects.all()
 
 
-class ChequeCreateView(SuccessMessageMixin, CreateView):
+class ChequeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Cheque
     form_class = ChequeForm
     success_url = "/"
-    success_message = "%(cheque_no)s added"
+    success_message = "%(cheque_no)s was added"
 
 
-class ChequeDeleteView(DeleteView):
+class ChequeDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     model = Cheque
-    success_url = "/cheques/"
+    success_url = "/"
+    success_message = "This cheque was deleted."
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(ChequeDeleteView, self).delete(request, *args, **kwargs)
+
+    def test_func(self):
+        return self.request.user.is_supervisor
 
 
-class ChequeDetailView(DetailView):
+class ChequeDetailView(LoginRequiredMixin, DetailView):
     model = Cheque
 
 
-class ChequeUpdateView(UpdateView):
+class ChequeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Cheque
     fields = "__all__"
+    template_name_suffix = "_update_form"
 
 
-class ChequeListView(ListView):
+class ChequeAddJournalUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Cheque
+    fields = ["journal"]
+    success_message = "Journal was updated"
+
+
+class ChequeListView(LoginRequiredMixin, ListView):
     model = Cheque
 
     def get_context_data(self, **kwargs):
@@ -112,18 +132,21 @@ class ChequeListView(ListView):
             return Cheque.objects.all()
 
 
+@login_required
 def cheque_paid_status(request, pk):
     cheque = Cheque.objects.get(pk=pk)
     cheque.cheque_status = "P"
     cheque.save()
-    messages.success(request, f"Cheque number {cheque.cheque_no} was updated.") 
+    cheque_status_display = cheque.get_cheque_status_display()
+    messages.success(request, f"Cheque number {cheque.cheque_no} was was {cheque_status_display}.")
     return redirect("cheque-list")
 
 
+@login_required
 def cheque_returned_status(request, pk):
     cheque = Cheque.objects.get(pk=pk)
     cheque.cheque_status = "R"
     cheque.save()
-    messages.success(request, f"Cheque number {cheque.cheque_no} was updated.") 
+    cheque_status_display = cheque.get_cheque_status_display()
+    messages.success(request, f"Cheque number {cheque.cheque_no} was {cheque_status_display}.")
     return redirect("cheque-list")
-

@@ -7,34 +7,76 @@
 {% load humanize %}
 
 {% block head_title %}
-{{object}}
+{{object.owner}}
 {% endblock head_title %}
 
 {% block content %}
-<div class="p-5">
-    <div class="col-lg mx-auto shadow p-5 rounded-4">
-        <h1>{{object}} | phone | address | address1</h1>
+<div class="p-lg-5">
+    <div class="col-lg-6 mx-auto shadow p-5 rounded-4">
+        <h1>{{object.owner.name|capfirst}}</h1>
+        <h3>Phone | Address, Address1</h3>
         <hr>
-        <div class="px-5">
-            <span class="text-muted">Date debited</span>
+        <div class="">
+            <div>
+                <span class="text-muted">Date debited:</span>
+                <span class="">{{object.date_debited}}</span>
+            </div>
             <br>
-            <span class="px-2">{{object.date_debited}}</span>
+            <div>
+                <span class="text-muted">Owner: </span>
+                <span class="">{{object.owner}}</span>
+            </div>
             <br>
-            <span class="text-muted">Owner</span>
+            <div>
+                <span class="text-muted">Reason returned:</span>
+                <span class="">{{object.returned}}</span>
+            </div>
             <br>
-            <span class="px-2">{{object.owner}}</span>
-            <br><br>
-            <span class="text-muted">Date debited</span>
+            <div>
+                <span class="text-muted">Amount: </span>
+                <span class="">${{object.chq_amount}}</span>
+            </div>
             <br>
-            <p>{{object.returned}}</p>
-            <br><br>
-            <p>{{object.chq_amount}}</p>
-            <p>{{object.journal}}</p>
-            <p>{{object.cheque_date}}</p>
-            <p>{{object.cheque_no}}</p>
-            <p>{{object.cheque_status}}</p>
-            <p>{{object.ministry}}</p>
-            <p>{{object.receipt_no}}</p>
+            <div>
+                <span class="text-muted">Journal: </span>
+                <span class="">{{object.journal}}</span>
+                <a class="small ms-1 text-muted"
+                    href="{% url 'cheque-update-journal' object.pk %}">Journal</a>
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Cheque date:</span>
+                <span class="">{{object.cheque_date}}</span>
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Cheque number: </span>
+                <span class="">{{object.cheque_no}}</span>
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Status:</span>
+                <span class="">{{object.get_cheque_status_display}}</span>
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Ministry: </span>
+                <span class="">${{object.ministry}}</span>
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Receipt number: </span>
+                <span class="">${{object.receipt_no}}</span>
+            </div>
+            <br>
+        </div>
+        <div class="my-3 text-end">
+            <a class="btn btn-lg btn-warning"
+                href="{% url 'cheque-delete' object.pk %}">Delete</a>
+        </div>
+        <hr>
+        <div class="small text-muted text-end">
+            <p>Updated at {{object.updated_at}}</p>
         </div>
     </div>
 </div>

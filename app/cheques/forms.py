@@ -2,7 +2,6 @@ from django import forms
 
 from .models import Cheque, Owner
 
-
 class ChequeForm(forms.ModelForm):
     class Meta:
         model = Cheque

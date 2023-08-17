@@ -18,8 +18,16 @@ class Command(BaseCommand):
         owners = []
         for _ in range(count):
             name = fake.company()
+            email = fake.profile()['mail']
+            phone = fake.profile()['ssn']
+            address = fake.address()
+            address1 = fake.postcode()
             owner = Owner(
                 name=name,
+                email=email,
+                phone=phone,
+                address=address,
+                address1=address1,
             )
             owners.append(owner)
         Owner.objects.bulk_create(owners)
