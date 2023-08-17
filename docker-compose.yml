@@ -10,7 +10,7 @@ services:
       - 8020
     env_file:
       - ./.env
-    # network_mode: "host"
+    network_mode: "host"
     restart: unless-stopped
     depends_on:
       - db
