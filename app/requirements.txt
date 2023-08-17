@@ -8,13 +8,16 @@ defusedxml==0.7.1
 Django==4.2.4
 django-allauth==0.54.0
 django-crispy-forms==2.0
+django-minio-storage==0.5.6
 django-request==1.6.3
 Faker==19.3.0
 gunicorn==21.2.0
 idna==3.4
+minio==7.1.16
 oauthlib==3.2.2
 packaging==23.1
 Pillow==10.0.0
+psycopg2-binary==2.9.7
 pycparser==2.21
 PyJWT==2.8.0
 python-dateutil==2.8.2

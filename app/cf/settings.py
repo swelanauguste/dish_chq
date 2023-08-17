@@ -9,10 +9,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-410rdl2nv&n!cgv%wgg)+zvlzeo%_u2mer3eq-!7*&dwoo#s(w"
+# SECRET_KEY = "django-insecure-410rdl2nv&n!cgv%wgg)+zvlzeo%_u2mer3eq-!7*&dwoo#s(w"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = ["localhost", "dis-chq.kingship.info"]
 
@@ -74,10 +76,21 @@ WSGI_APPLICATION = "cf.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
 
@@ -134,20 +147,34 @@ SITE_ID = 1
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+#######################
+# Email_settings
+#######################
 
-# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = "emails"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "smtp.gmail.com"
-    # EMAIL_HOST = "mail.govt.lc"
     EMAIL_HOST_USER = os.environ.get("EMAIL")
-    EMAIL_HOST_PASSWORD = os.environ.get("PASSWORD")
+    EMAIL_HOST_PASSWORD = os.environ.get("PASS")
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     EMAIL_USE_SSL = False
+    DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+    STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
+    MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
+    MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY")
+    MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
+    MINIO_STORAGE_USE_HTTPS = True
+    MINIO_STORAGE_MEDIA_OBJECT_METADATA = {"Cache-Control": "max-age=1000"}
+    MINIO_STORAGE_MEDIA_BUCKET_NAME = 'dishchq-1-mediafiles'
+    MINIO_STORAGE_MEDIA_BACKUP_BUCKET = 'Recycle Bin'
+    MINIO_STORAGE_MEDIA_BACKUP_FORMAT = '%c/'
+    MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+    MINIO_STORAGE_STATIC_BUCKET_NAME = 'dishchq-1-staticfiles'
+    MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
 
 ######################
 # Authentication settings for allauth

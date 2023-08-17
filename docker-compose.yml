@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./app
+    command: gunicorn cf.wsgi:application --bind 0.0.0.0:8020
+    volumes:
+      - ./app/:/usr/src/app/
+    expose:
+      - 8020
+    env_file:
+      - ./.env
+    # network_mode: "host"
+    restart: unless-stopped
+    depends_on:
+      - db
