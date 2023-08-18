@@ -13,8 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = bool(os.environ.get("DEBUG", default=0))
+DEBUG = False
 
 ALLOWED_HOSTS = ["localhost", "dis-chq.kingship.info"]
 
@@ -151,30 +150,30 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Email_settings
 #######################
 
-if DEBUG:
-    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-    EMAIL_FILE_PATH = "emails"
-else:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = "smtp.gmail.com"
-    EMAIL_HOST_USER = os.environ.get("EMAIL")
-    EMAIL_HOST_PASSWORD = os.environ.get("PASS")
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_USE_SSL = False
-    DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
-    STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
-    MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
-    MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY")
-    MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
-    MINIO_STORAGE_USE_HTTPS = True
-    MINIO_STORAGE_MEDIA_OBJECT_METADATA = {"Cache-Control": "max-age=1000"}
-    MINIO_STORAGE_MEDIA_BUCKET_NAME = 'dishchq-1-mediafiles'
-    MINIO_STORAGE_MEDIA_BACKUP_BUCKET = 'Recycle Bin'
-    MINIO_STORAGE_MEDIA_BACKUP_FORMAT = '%c/'
-    MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
-    MINIO_STORAGE_STATIC_BUCKET_NAME = 'dishchq-1-staticfiles'
-    MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = "emails"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = os.environ.get("EMAIL")
+EMAIL_HOST_PASSWORD = os.environ.get("PASS")
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+DEFAULT_FILE_STORAGE = os.environ.get("DEFAULT_FILE_STORAGE")
+STATICFILES_STORAGE = os.environ.get("STATICFILES_STORAGE")
+MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
+MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY")
+MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
+MINIO_STORAGE_USE_HTTPS = True
+MINIO_STORAGE_MEDIA_OBJECT_METADATA = {"Cache-Control": "max-age=1000"}
+MINIO_STORAGE_MEDIA_BUCKET_NAME = 'dishchq-1-mediafiles'
+MINIO_STORAGE_MEDIA_BACKUP_BUCKET = 'Recycle Bin'
+MINIO_STORAGE_MEDIA_BACKUP_FORMAT = '%c/'
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+MINIO_STORAGE_STATIC_BUCKET_NAME = 'dishchq-1-staticfiles'
+MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
 
 ######################
 # Authentication settings for allauth
