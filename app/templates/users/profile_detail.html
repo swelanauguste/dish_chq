@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+{{object}}
+{% endblock head_title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="col-lg-6 mx-auto shadow p-5 rounded-4 border border-3">
+        <h1>{{object}}</h1>
+        <hr>
+        <div>
+            <div>
+                {% if object.image %}
+                <span><img class="rounded-4" width="100" height="100"
+                        src="{{object.image.url}}"
+                        alt=""></span>
+                {% endif %}
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Email: </span>
+                <span><a class="text-dark"
+                        href="mailto:{{object.user.email}}">{{object.user.email}}</a></span>
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Gender: </span>
+                <span>{{object.get_gender_display}}</span>
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Phone:</span>
+                <span>{{object.phone|default:'-'}}
+                    {{object.phone1|default:'-'}}</span>
+            </div>
+            <br>
+            <div>
+                <span class="text-muted">Bio: </span>
+                <span>{{object.bio}}</span>
+            </div>
+            <br>
+            <div class="my-5 d-grid">
+                <a class="btn btn-lg btn-outline-warning rounded-pill"
+                    href="{% url 'profile-update' object.uid %}">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $("#id_owner").select2();
+    $("#id_ministry").select2();
+
+</script>
+{% endblock scripts %}

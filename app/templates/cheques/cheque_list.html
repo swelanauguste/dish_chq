@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% load humanize %}
-
+{% load crispy_forms_tags %}
 {% load subtract %}
 
 {% block head_title %}
@@ -104,11 +104,13 @@ Cheques
                     <td>{{ob.returned|upper}}</td>
                     <td>${{ob.chq_amount|intcomma}}</td>
                     <td><a class="text-decoration-none small"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal{{ob.pk}}"
                             href="{% url 'cheque-update-journal' ob.pk %}">
-                            {{ob.journal|default:"Journal"}}</a></td>
+                            {{ob.journal|default:"add journal"}}</a></td>
                     <td>{{ob.cheque_date}}</td>
                     <td><a class="text-dark"
-                            href="{% url 'cheque-detail' ob.pk %}">{{ob.cheque_no}}</a>
+                            href="{{ ob.get_absolute_url }}">{{ob.cheque_no}}</a>
                     </td>
                     {% if ob.cheque_status == 'P' %}
                     <td><a title="paid"
@@ -120,13 +122,13 @@ Cheques
                             class="btn btn-sm btn-outline-dark"
                             href="{% url 'cheque-paid' ob.pk %}">{{ob.cheque_status}}</a>
                     </td>
-                    
+
                     {% elif ob.cheque_status == 'U' %}
                     <td><a title="unpaid"
                             class="btn btn-sm btn-outline-dark"
                             href="{% url 'cheque-returned' ob.pk %}">{{ob.cheque_status}}</a>
                     </td>
-                    
+
                     {% endif %}
                     <td>{{ob.receipt_no}}</td>
                     <td><a class="text-dark"
@@ -137,4 +139,42 @@ Cheques
         </table>
     </div>
 </div>
+
+{% for ob in object_list %}
+<!-- Modal -->
+<div class="modal fade"
+    id="exampleModal{{ob.pk}}"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5"
+                    id="exampleModalLabel">{{ob.owner|title}}</h1>
+                <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><span class="text-muted small">Journal:
+                    </span>{{ob.journal|default:'add journal'}}</p>
+                <form action="{% url 'cheque-update-journal' ob.pk %}"
+                    method="post">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <div class="d-grid">
+                        <button class="btn btn-lg btn-outline-dark"
+                            type="submit">submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+
 {% endblock content %}

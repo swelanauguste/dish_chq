@@ -2,6 +2,7 @@ from django import forms
 
 from .models import Cheque, Owner
 
+
 class ChequeForm(forms.ModelForm):
     class Meta:
         model = Cheque
@@ -11,3 +12,9 @@ class ChequeForm(forms.ModelForm):
             "date_debited": forms.TextInput(attrs={"type": "date"}),
             "cheque_date": forms.TextInput(attrs={"type": "date"}),
         }
+
+
+class ChequeAddJournalUpdateViewForm(forms.ModelForm):
+    class Meta:
+        model = Cheque
+        fields = ["journal"]

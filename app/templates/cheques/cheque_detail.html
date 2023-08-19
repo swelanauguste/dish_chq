@@ -16,7 +16,7 @@
         <h1>{{object.owner.name|capfirst}}</h1>
         <h3>Phone | Address, Address1</h3>
         <hr>
-        <div class="">
+        <div>
             <div>
                 <span class="text-muted">Date debited:</span>
                 <span class="">{{object.date_debited}}</span>
@@ -70,10 +70,12 @@
             </div>
             <br>
         </div>
+        {% if request.user.is_supervisor %}
         <div class="my-3 text-end">
             <a class="btn btn-lg btn-warning"
                 href="{% url 'cheque-delete' object.pk %}">Delete</a>
         </div>
+        {% endif %}
         <hr>
         <div class="small text-muted text-end">
             <p>Updated at {{object.updated_at}}</p>

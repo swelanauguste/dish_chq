@@ -1,6 +1,9 @@
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
+from django.utils.text import slugify
+from users.models import User
+
 
 class Owner(models.Model):
     """
@@ -29,6 +32,9 @@ class Returned(models.Model):
 
     name = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = "returns"
+
     def __str__(self):
         return f"{self.name.upper()}"
 
@@ -46,6 +52,7 @@ class Ministry(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name_plural = "Ministries"
 
     def __str__(self):
         return self.name.upper()
@@ -64,7 +71,6 @@ class Cheque(models.Model):
     date_debited = models.DateField()
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name="cheques")
     returned = models.ForeignKey(Returned, on_delete=models.CASCADE)
-    returned_other = models.CharField("other", max_length=255, blank=True)
     chq_amount = models.DecimalField("cheque amount", max_digits=10, decimal_places=2)
     journal = models.CharField(max_length=255, blank=True)
     cheque_date = models.DateField()
@@ -76,6 +82,20 @@ class Cheque(models.Model):
     receipt_no = models.CharField("receipt number", max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="cheques_created",
+        null=True,
+        blank=True,
+    )
+    updated_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="cheques_updated",
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         ordering = ("date_debited",)

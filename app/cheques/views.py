@@ -13,7 +13,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .forms import ChequeForm
+from .forms import ChequeForm, ChequeAddJournalUpdateViewForm
 from .models import Cheque, Owner
 
 
@@ -101,6 +101,7 @@ class ChequeAddJournalUpdateView(LoginRequiredMixin, SuccessMessageMixin, Update
     model = Cheque
     fields = ["journal"]
     success_message = "Journal was updated"
+    success_url = "/"
 
 
 class ChequeListView(LoginRequiredMixin, ListView):
@@ -114,6 +115,7 @@ class ChequeListView(LoginRequiredMixin, ListView):
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
         context["total_amount"] = total_amount
         context["paid_cheque_total_amount"] = paid_cheque_total_amount
+        context["form"] = ChequeAddJournalUpdateViewForm(initial={})
         return context
 
     def get_queryset(self):

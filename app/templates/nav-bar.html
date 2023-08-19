@@ -12,6 +12,10 @@
             class="nav-link px-2 link-secondary">Cheques</a></li>
         <li><a href="{% url 'owner-list' %}"
             class="nav-link px-2 link-body-emphasis">Owners</a></li>
+        {% if request.user.is_supervisor %}
+        <li><a href="{% url 'profile-list' %}"
+            class="nav-link px-2 link-body-emphasis">Users</a></li>
+        {% endif %}
         <!-- <li><a href="#"
             class="nav-link px-2 link-body-emphasis">Ministry</a></li> -->
       </ul>
@@ -20,7 +24,7 @@
           class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
           data-bs-toggle="dropdown"
           aria-expanded="false">
-          <img src="https://github.com/mdo.png"
+          <img src="{{ request.user.profile.image.url }}"
             alt="mdo"
             width="32"
             height="32"
@@ -29,6 +33,10 @@
         <ul class="dropdown-menu text-small">
 
           {% if request.user.is_authenticated %}
+          <li><a class="dropdown-item"
+              href="{% url 'profile-detail' request.user.profile.uid %}">Profile</a>
+          </li>
+
           <li><a class="dropdown-item"
               href="{% url 'account_logout' %}">Sign out</a></li>
           {% else %}

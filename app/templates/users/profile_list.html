@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% load subtract %}
+
+{% block head_title %}
+Users
+{% endblock head_title %}
+
+
+{% block content %}
+
+<div class="p-5">
+    <div class="d-flex justify-content-center p-5">
+        <div class="col-lg-6">
+            <form action=""
+                method="get">
+                <input type="search"
+                    class="form-control form-control-lg border border-3 rounded-pill"
+                    autofocus="autofocus"
+                    placeholder="Search"
+                    name="profiles"
+                    id="cheque_id_id">
+            </form>
+        </div>
+        <div class="mx-3 pt-2">
+            <a class="small text-muted"
+                href="{% url 'profile-list' %}">reset</a>
+        </div>
+
+    </div>
+
+    <table class="mt-3 table table-hover table-bordered">
+        <thead>
+            <tr class="table-dark fs-4">
+                <th scope="col">#</th>
+                <th scope="col"></th>
+                <th scope="col">User</th>
+                <th scope="col">email</th>
+                <th scope="col">Sex</th>
+                <th scope="col">Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ob in object_list %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>User Roles: {% for role in ob.user.get_user_roles %}{{ role|title }}
+                    {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                <td><a class="text-dark"
+                        href="{{ ob.get_absolute_url }}">{{ob}}</a>
+                </td>
+                <td>{{ob.user.email}}</td>
+                <td>{{ob.get_gender_display}}</td>
+                <td>{{ob.phone|default:"-"}} {{ob.phone1|default:"-"}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

@@ -44,7 +44,7 @@
                     <td>{{ob.returned|title}}</td>
                     <td>${{ob.chq_amount|intcomma}}</td>
                     <td>{{ob.cheque_date}}</td>
-                    <td><a class="text-dark" href="">{{ob.cheque_no}}</a></td>
+                    <td><a class="text-dark" href="{{ ob.get_absolute_url }}">{{ob.cheque_no}}</a></td>
                     {% if ob.cheque_status == 'P' %}
                     <td><a class="btn btn-sm btn-outline-dark"
                             href="{% url 'cheque-returned' ob.pk %}">{{ob.cheque_status}}</a>

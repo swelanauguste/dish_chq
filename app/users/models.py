@@ -11,11 +11,28 @@ class User(AbstractUser):
     is_creator = models.BooleanField(default=True)
     is_supervisor = models.BooleanField(default=False)
 
+    def get_user_roles(self):
+        roles = []
+        if self.is_viewer:
+            roles.append("viewer")
+        if self.is_creator:
+            roles.append("creator")
+        if self.is_supervisor:
+            roles.append("supervisor")
+        
+        return roles if roles else ["user"]
+
+    # def get_absolute_url(self):
+    #     return reverse("users:detail", kwargs={"username": self.username})
+
+    def __str__(self):
+        return self.username
+
 
 class Profile(models.Model):
     GENDER_LIST = [
-        ("F", "F"),
-        ("M", "M"),
+        ("F", "Female"),
+        ("M", "Male"),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     uid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -27,16 +44,13 @@ class Profile(models.Model):
     )
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255, blank=True)
-    slug = models.SlugField(max_length=255, blank=True)
-    gender = models.CharField(
-        max_length=1, choices=GENDER_LIST, default=GENDER_LIST[0][0]
-    )
-    phone = models.TextField(null=True, default="+1")
-    phone1 = models.TextField(blank=True)
+    gender = models.CharField(max_length=1, choices=GENDER_LIST)
+    phone = models.CharField(max_length=25, null=True, default="+1")
+    phone1 = models.CharField(max_length=25, blank=True)
     bio = models.TextField(blank=True)
 
-    # def get_absolute_url(self):
-    #     return reverse("profile", kwargs={"slug": self.slug})
+    def get_absolute_url(self):
+        return reverse("profile-detail", kwargs={"slug": self.uid})
 
     def get_profile_initials(self):
         if self.first_name and self.last_name:

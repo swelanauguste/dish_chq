@@ -9,11 +9,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = "django-insecure-410rdl2nv&n!cgv%wgg)+zvlzeo%_u2mer3eq-!7*&dwoo#s(w"
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "django-insecure-410rdl2nv&n!cgv%wgg)+zvlzeo%_u2mer3eq-!7*&dwoo#s(w"
+# SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "dis-chq.kingship.info"]
 
@@ -146,34 +146,40 @@ SITE_ID = 1
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
 #######################
-# Email_settings
+# email_settings
 #######################
 
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = "emails"
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_HOST_USER = os.environ.get("EMAIL")
+# EMAIL_HOST_PASSWORD = os.environ.get("PASS")
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
 
-# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-# EMAIL_FILE_PATH = "emails"
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = os.environ.get("EMAIL")
-EMAIL_HOST_PASSWORD = os.environ.get("PASS")
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-DEFAULT_FILE_STORAGE = os.environ.get("DEFAULT_FILE_STORAGE")
-STATICFILES_STORAGE = os.environ.get("STATICFILES_STORAGE")
-MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
-MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY")
-MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
-MINIO_STORAGE_USE_HTTPS = True
-MINIO_STORAGE_MEDIA_OBJECT_METADATA = {"Cache-Control": "max-age=1000"}
-MINIO_STORAGE_MEDIA_BUCKET_NAME = 'dishchq-1-mediafiles'
-MINIO_STORAGE_MEDIA_BACKUP_BUCKET = 'Recycle Bin'
-MINIO_STORAGE_MEDIA_BACKUP_FORMAT = '%c/'
-MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
-MINIO_STORAGE_STATIC_BUCKET_NAME = 'dishchq-1-staticfiles'
-MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+#######################
+# storage_settings
+#######################
+
+# DEFAULT_FILE_STORAGE = os.environ.get("DEFAULT_FILE_STORAGE")
+# STATICFILES_STORAGE = os.environ.get("STATICFILES_STORAGE")
+# MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
+# MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY")
+# MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
+# MINIO_STORAGE_USE_HTTPS = True
+# MINIO_STORAGE_MEDIA_OBJECT_METADATA = {"Cache-Control": "max-age=1000"}
+# MINIO_STORAGE_MEDIA_BUCKET_NAME = 'dishchq-1-mediafiles'
+# MINIO_STORAGE_MEDIA_BACKUP_BUCKET = 'Recycle Bin'
+# MINIO_STORAGE_MEDIA_BACKUP_FORMAT = '%c/'
+# MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+# MINIO_STORAGE_STATIC_BUCKET_NAME = 'dishchq-1-staticfiles'
+# MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
 
 ######################
 # Authentication settings for allauth

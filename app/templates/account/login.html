@@ -9,7 +9,7 @@
 {% block content %}
 <div class="col-lg-4 mx-auto">
   <div class="p-5 m-5 border border-3 shadow rounded-4">
-    <h1 class="display-1">{% trans "Sign In" %}</h1>
+    <h1 class="display-1 text-center">{% trans "Sign In" %}</h1>
     <hr>
 
     {% get_providers as socialaccount_providers %}
@@ -50,11 +50,11 @@
         name="{{ redirect_field_name }}"
         value="{{ redirect_field_value }}" />
       {% endif %}
-        <!-- <a class="text-muted small"
+        <a class="text-muted small"
           href="{% url 'account_reset_password' %}">
-          {% trans "Forgot Password?" %}</a> -->
+          {% trans "Forgot Password?" %}</a>
       <div class="my-lg-5 text-end d-grid">
-        <button class="btn btn-lg btn-outline-dark rounded-pill px-5"
+        <button class="btn btn-lg btn-outline-dark rounded-pill"
           type="submit">{% trans "Sign In" %}</button>
       </div>
     </form>
