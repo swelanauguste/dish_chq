@@ -1,3 +1,4 @@
+{% if request.user.is_authenticated %}
 <header class="p-3 mb-3 border-bottom">
   <div class="container">
     <div
@@ -24,6 +25,7 @@
           class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
           data-bs-toggle="dropdown"
           aria-expanded="false">
+
           <img src="{{ request.user.profile.image.url }}"
             alt="mdo"
             width="32"
@@ -31,12 +33,10 @@
             class="rounded-circle">
         </a>
         <ul class="dropdown-menu text-small">
-
           {% if request.user.is_authenticated %}
           <li><a class="dropdown-item"
               href="{% url 'profile-detail' request.user.profile.uid %}">Profile</a>
           </li>
-
           <li><a class="dropdown-item"
               href="{% url 'account_logout' %}">Sign out</a></li>
           {% else %}
@@ -50,3 +50,4 @@
     </div>
   </div>
 </header>
+{% endif %}
