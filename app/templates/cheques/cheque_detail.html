@@ -70,8 +70,14 @@
             </div>
             <br>
         </div>
+        <div class="my-3 text-end">
+            <a class="btn btn-lg btn-warning"
+                href="{% url 'cheque-update' object.pk %}">Update</a>
+        </div>
         {% if request.user.is_supervisor %}
         <div class="my-3 text-end">
+            <a class="btn btn-lg btn-warning"
+                href="{% url 'cheque-update' object.pk %}">Update</a>
             <a class="btn btn-lg btn-warning"
                 href="{% url 'cheque-delete' object.pk %}">Delete</a>
         </div>

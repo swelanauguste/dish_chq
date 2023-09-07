@@ -20,15 +20,14 @@
             <thead>
                 <tr class="table-dark fs-4">
                     <th scope="col">#</th>
-                    <th scope="col">Date Debited</th>
-                    <th scope="col">Owner</th>
+                    <th scope="col">Debited</th>
                     <th scope="col">Reason</th>
-                    <th scope="col">Cheque Amount</th>
-                    <th scope="col">Cheque Date</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Date</th>
                     <th scope="col">Cheque No.</th>
-                    <th scope="col">Status</th>
                     <th scope="col">Receipt No.</th>
                     <th scope="col">Ministry</th>
+                    <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,11 +39,12 @@
                     {% endif %}>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{ob.date_debited}}</td>
-                    <td><a class="text-dark" href="{% url 'owner-detail' ob.owner.pk %}">{{ob.owner}}</a></td>
                     <td>{{ob.returned|title}}</td>
                     <td>${{ob.chq_amount|intcomma}}</td>
                     <td>{{ob.cheque_date}}</td>
-                    <td><a class="text-dark" href="{{ ob.get_absolute_url }}">{{ob.cheque_no}}</a></td>
+                    <td><a class="text-dark" href="{{ ob.get_absolute_url }}">{{ob.cheque_no|upper}}</a></td>
+                    <td>{{ob.receipt_no}}</td>
+                    <td><a class="text-dark" href="">{{ob.ministry|upper}}</a></td>
                     {% if ob.cheque_status == 'P' %}
                     <td><a class="btn btn-sm btn-outline-dark"
                             href="{% url 'cheque-returned' ob.pk %}">{{ob.cheque_status}}</a>
@@ -54,13 +54,6 @@
                             href="{% url 'cheque-paid' ob.pk %}">{{ob.cheque_status}}</a>
                     </td>
                     {% endif %}
-                    <td>{{ob.receipt_no}}</td>
-                    <td><a class="text-dark" href="">{{ob.ministry|upper}}</a></td>
-                    <td>
-                        <a href=""><span class="material-symbols-outlined fs-3">
-                        info
-                        </span>
-                    </a></td>
                 </tr>
                 {% empty %}
                 <tr>

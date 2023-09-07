@@ -55,9 +55,9 @@ Cheques
             <tr>
                 <th scope="row">{{forloop.counter}}</th>
                 <td><a class="text-dark"
-                        href="{% url 'owner-detail' ob.pk %}">{{ob.name}}</a>
+                        href="{% url 'owner-detail' ob.pk %}">{{ob.name|title}}</a>
                 </td>
-                <td>{{ob.email|title}}</td>
+                <td>{{ob.email}}</td>
                 <td>{{ob.phone}}</td>
                 <td>{{ob.address}} {{obb.address1}}</td>
             </tr>

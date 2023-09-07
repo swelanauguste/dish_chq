@@ -20,6 +20,8 @@ python manage.py createsuperuser --username kingship --email kingship.lc@gmail.c
 
 python manage.py add_returns
 python manage.py add_ministries
+python manage.py add_owners
+python manage.py add_cheques
 
 # python manage.py migrate --run-syncdb
 

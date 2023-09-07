@@ -1,15 +1,48 @@
-
+{% extends 'base.html' %}
 
 {% load crispy_forms_tags %}
 
+{% block head_title %}
+Form
+{% endblock head_title %}
 
+{% block content %}
 
+<div class="m-5 p-2">
+   
+    <div class="col-lg-8 mx-auto">
         <form action=""
             method="post">
             {% csrf_token %}
-            {{form|crispy}}
-            <div class="my-3 text-end">
-                <button class="btn btn-lg btn-outline-dark"
-                    type="submit">Submit</button>
+            <div class="shadow rounded-4 p-4">
+                <h1>Form</h1>
+                <hr><br>
+                <div class="row">
+                    <div class="col-lg col-12">
+                        {{ form.name|as_crispy_field }}
+                    </div>
+                    <div class="col-lg col-12">
+                        {{ form.phone|as_crispy_field }}
+                    </div>
+                    <div class="col-lg col-12">
+                        {{ form.email|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg col-12">
+                        {{ form.address|as_crispy_field }}
+                    </div>
+                    <div class="col-lg col-12">
+                        {{ form.address1|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button class="btn btn-lg btn-outline-dark"
+                        type="submit">Submit</button>
+                </div>
             </div>
         </form>
+    </div>
+</div>
+
+{% endblock content %}

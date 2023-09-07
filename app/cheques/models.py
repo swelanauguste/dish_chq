@@ -10,13 +10,16 @@ class Owner(models.Model):
     Model for Owner
     """
 
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=255, blank=True)
     address = models.CharField(max_length=255, blank=True)
     address1 = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse("owner-detail", kwargs={"pk": self.pk})
 
     class Meta:
         ordering = ["name"]
@@ -34,6 +37,7 @@ class Returned(models.Model):
 
     class Meta:
         verbose_name_plural = "returns"
+        ordering = ("name",)
 
     def __str__(self):
         return f"{self.name.upper()}"
@@ -51,7 +55,7 @@ class Ministry(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ["name"]
         verbose_name_plural = "Ministries"
 
     def __str__(self):
@@ -68,9 +72,14 @@ class Cheque(models.Model):
         ("U", "Unpaid"),
         ("R", "Returned"),
     )
+    is_deleted = models.BooleanField(default=False)
     date_debited = models.DateField()
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name="cheques")
-    returned = models.ForeignKey(Returned, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        Owner,
+        on_delete=models.CASCADE,
+        related_name="cheques",
+    )
+    returned = models.ForeignKey(Returned, on_delete=models.CASCADE, default=1)
     chq_amount = models.DecimalField("cheque amount", max_digits=10, decimal_places=2)
     journal = models.CharField(max_length=255, blank=True)
     cheque_date = models.DateField()
@@ -78,7 +87,10 @@ class Cheque(models.Model):
     cheque_status = models.CharField(
         max_length=1, choices=CHEQUE_STATUS, default=CHEQUE_STATUS[1][0], blank=True
     )
-    ministry = models.ForeignKey(Ministry, on_delete=models.CASCADE)
+    ministry = models.ForeignKey(
+        Ministry,
+        on_delete=models.CASCADE,
+    )
     receipt_no = models.CharField("receipt number", max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -104,4 +116,4 @@ class Cheque(models.Model):
         return reverse("cheque-detail", kwargs={"pk": self.pk})
 
     def __str__(self):
-        return f"{self.owner} - ${self.chq_amount} - {self.cheque_status}"
+        return self.cheque_no.upper()

@@ -1,3 +1,11 @@
 Missing Signature
 Figure And Amount Mismatch
 Refer To Drawer	
+Refer to drawer
+Post dated
+Words missing
+stale dated
+Other
+Accounts Closed
+date missing
+Payee Missing

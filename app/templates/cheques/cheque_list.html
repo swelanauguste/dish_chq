@@ -110,7 +110,7 @@ Cheques
                             {{ob.journal|default:"add journal"}}</a></td>
                     <td>{{ob.cheque_date}}</td>
                     <td><a class="text-dark"
-                            href="{{ ob.get_absolute_url }}">{{ob.cheque_no}}</a>
+                            href="{{ ob.get_absolute_url }}">{{ob.cheque_no|upper}}</a>
                     </td>
                     {% if ob.cheque_status == 'P' %}
                     <td><a title="paid"

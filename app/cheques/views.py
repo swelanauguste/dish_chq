@@ -13,8 +13,38 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .forms import ChequeForm, ChequeAddJournalUpdateViewForm
-from .models import Cheque, Owner
+from .forms import ChequeAddJournalUpdateViewForm, ChequeCreateForm, ChequeUpdateForm
+from .models import Cheque, Ministry, Owner, Returned
+
+
+class ReturnedCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Returned
+    fields = "__all__"
+    success_url = "/"
+    success_message = "%(name)s was created"
+
+
+class ReturnedUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Returned
+    fields = "__all__"
+    success_url = "/"
+    success_message = "%(name)s was updated"
+    template_name_suffix = "_update_form"
+
+
+class MinistryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Ministry
+    fields = "__all__"
+    success_url = "/"
+    success_message = "%(name)s was created"
+
+
+class MinistryUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Ministry
+    fields = "__all__"
+    success_url = "/"
+    success_message = "%(name)s was updated"
+    template_name_suffix = "_update_form"
 
 
 class OwnerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -69,16 +99,23 @@ class OwnerListView(LoginRequiredMixin, ListView):
 
 class ChequeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Cheque
-    form_class = ChequeForm
+    form_class = ChequeCreateForm
     success_url = "/"
     success_message = "%(cheque_no)s was added"
 
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
 
-class ChequeDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+
+class ChequeDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
     model = Cheque
     success_url = "/"
     success_message = "This cheque was deleted."
-    
+
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(ChequeDeleteView, self).delete(request, *args, **kwargs)
@@ -93,8 +130,12 @@ class ChequeDetailView(LoginRequiredMixin, DetailView):
 
 class ChequeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Cheque
-    fields = "__all__"
+    form_class = ChequeUpdateForm
     template_name_suffix = "_update_form"
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
 
 
 class ChequeAddJournalUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -102,6 +143,10 @@ class ChequeAddJournalUpdateView(LoginRequiredMixin, SuccessMessageMixin, Update
     fields = ["journal"]
     success_message = "Journal was updated"
     success_url = "/"
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
 
 
 class ChequeListView(LoginRequiredMixin, ListView):
@@ -140,7 +185,9 @@ def cheque_paid_status(request, pk):
     cheque.cheque_status = "P"
     cheque.save()
     cheque_status_display = cheque.get_cheque_status_display()
-    messages.success(request, f"Cheque number {cheque.cheque_no} was was {cheque_status_display}.")
+    messages.success(
+        request, f"Cheque number {cheque.cheque_no} was was {cheque_status_display}."
+    )
     return redirect("cheque-list")
 
 
@@ -150,5 +197,7 @@ def cheque_returned_status(request, pk):
     cheque.cheque_status = "R"
     cheque.save()
     cheque_status_display = cheque.get_cheque_status_display()
-    messages.success(request, f"Cheque number {cheque.cheque_no} was {cheque_status_display}.")
+    messages.success(
+        request, f"Cheque number {cheque.cheque_no} was {cheque_status_display}."
+    )
     return redirect("cheque-list")
