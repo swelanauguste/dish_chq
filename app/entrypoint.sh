@@ -16,12 +16,12 @@ python manage.py migrate
 python manage.py makemigrations
 python manage.py migrate
 
-python manage.py createsuperuser --username kingship --email kingship.lc@gmail.com --noinput
+# python manage.py createsuperuser --username kingship --email kingship.lc@gmail.com --noinput
 
-python manage.py add_returns
-python manage.py add_ministries
-python manage.py add_owners
-python manage.py add_cheques
+# python manage.py add_returns
+# python manage.py add_ministries
+# python manage.py add_owners
+# python manage.py add_cheques
 
 # python manage.py migrate --run-syncdb
 
