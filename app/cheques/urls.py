@@ -6,8 +6,11 @@ from .views import (
     ChequeDeleteView,
     ChequeDetailView,
     ChequeListView,
+    ChequeStatusChangeUpdateView,
     ChequeUpdateView,
     MinistryCreateView,
+    MinistryDetailView,
+    MinistryListView,
     MinistryUpdateView,
     OwnerCreateView,
     OwnerDetailView,
@@ -15,8 +18,6 @@ from .views import (
     OwnerUpdateView,
     ReturnedCreateView,
     ReturnedUpdateView,
-    cheque_paid_status,
-    cheque_returned_status,
 )
 
 urlpatterns = [
@@ -26,17 +27,22 @@ urlpatterns = [
     path("cheque/detail/<int:pk>/", ChequeDetailView.as_view(), name="cheque-detail"),
     path("cheque/delete/<int:pk>/", ChequeDeleteView.as_view(), name="cheque-delete"),
     path(
-        "cheque/update-journal/<int:pk>/",
+        "cheque/journal/update/<int:pk>/",
         ChequeAddJournalUpdateView.as_view(),
         name="cheque-update-journal",
     ),
-    path("returned/<int:pk>/", cheque_returned_status, name="cheque-returned"),
-    path("paid/<int:pk>/", cheque_paid_status, name="cheque-paid"),
+    path(
+        "cheque/status/update/<int:pk>/",
+        ChequeStatusChangeUpdateView.as_view(),
+        name="cheque-update-status",
+    ),
     path("owners/", OwnerListView.as_view(), name="owner-list"),
     path("owner/create/", OwnerCreateView.as_view(), name="owner-create"),
     path("owner/detail/<int:pk>/", OwnerDetailView.as_view(), name="owner-detail"),
     path("owner/update/<int:pk>/", OwnerUpdateView.as_view(), name="owner-update"),
+    path("ministries/", MinistryListView.as_view(), name="ministry-list"),
     path("ministry/create/", MinistryCreateView.as_view(), name="ministry-create"),
+    path("ministry/detail/<int:pk>/", MinistryDetailView.as_view(), name="ministry-detail"),
     path(
         "ministry/update/<int:pk>/",
         MinistryUpdateView.as_view(),

@@ -5,7 +5,7 @@
 {% load subtract %}
 
 {% block head_title %}
-Owners
+Ministries
 {% endblock head_title %}
 
 
@@ -16,7 +16,7 @@ Owners
         <div class="mx-5 pt-2">
             <a title="add cheque"
                 class="text-decoration-none text-dark"
-                href="{% url 'owner-create' %}">
+                href="{% url 'ministry-create' %}">
                 <span class="material-symbols-outlined fs-1">
                     add_circle
                 </span>
@@ -29,13 +29,13 @@ Owners
                     class="form-control form-control-lg border border-3 rounded-pill"
                     autofocus="autofocus"
                     placeholder="Search"
-                    name="owners"
+                    name="ministries"
                     id="cheque_id_id">
             </form>
         </div>
         <div class="mx-3 pt-2">
             <a class="small text-muted"
-                href="{% url 'owner-list' %}">reset</a>
+                href="{% url 'ministry-list' %}">reset</a>
         </div>
 
     </div>
@@ -47,7 +47,6 @@ Owners
                 <th scope="col">Name</th>
                 <th scope="col">E-mail</th>
                 <th scope="col">Phone</th>
-                <th scope="col">Address</th>
             </tr>
         </thead>
         <tbody>
@@ -55,11 +54,10 @@ Owners
             <tr>
                 <th scope="row">{{forloop.counter}}</th>
                 <td><a class="text-dark"
-                        href="{% url 'owner-detail' ob.pk %}">{{ob.name|title}}</a>
+                        href="{% url 'ministry-detail' ob.pk %}">{{ob.name|title}}</a>
                 </td>
                 <td>{{ob.email}}</td>
                 <td>{{ob.phone}}</td>
-                <td>{{ob.address}} {{obb.address1}}</td>
             </tr>
             {% endfor %}
         </tbody>

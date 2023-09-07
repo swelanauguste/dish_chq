@@ -19,13 +19,14 @@
                 </span></a>
         </div>
         <h1>{{object}}</h1>
-        <h3>{{object.phone}} | {{object.address}} | {{object.address1}}</h3>
+        <h3>{{object.phone}}</h3>
         <hr>
         <table class="mt-3 table table-hover table-bordered">
             <thead>
                 <tr class="table-dark fs-4">
                     <th scope="col">#</th>
                     <th scope="col">Debited</th>
+                    <th scope="col">Owner</th>
                     <th scope="col">Reason</th>
                     <th scope="col">Amount</th>
                     <th scope="col">Date</th>
@@ -40,6 +41,7 @@
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{ob.date_debited}}</td>
+                    <td><a class="text-dark" href="{{ob.owner.get_absolute_url}}">{{ob.owner}}</a></td>
                     <td>{{ob.returned|title}}</td>
                     <td>${{ob.chq_amount|intcomma}}</td>
                     <td>{{ob.cheque_date}}</td>

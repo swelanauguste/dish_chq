@@ -10,9 +10,11 @@
       <ul
         class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="{% url 'cheque-list' %}"
-            class="nav-link px-2 link-secondary">Cheques</a></li>
+            class="nav-link px-2 link-body-emphasis">Cheques</a></li>
         <li><a href="{% url 'owner-list' %}"
             class="nav-link px-2 link-body-emphasis">Owners</a></li>
+        <li><a href="{% url 'ministry-list' %}"
+            class="nav-link px-2 link-body-emphasis">Ministries</a></li>
         {% if request.user.is_supervisor %}
         <li><a href="{% url 'profile-list' %}"
             class="nav-link px-2 link-body-emphasis">Users</a></li>

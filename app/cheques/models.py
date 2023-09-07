@@ -57,6 +57,9 @@ class Ministry(models.Model):
     class Meta:
         ordering = ["name"]
         verbose_name_plural = "Ministries"
+        
+    def get_absolute_url(self):
+        return reverse("ministry-detail", kwargs={"pk": self.pk})
 
     def __str__(self):
         return self.name.upper()

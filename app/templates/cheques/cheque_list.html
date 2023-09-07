@@ -89,13 +89,7 @@ Cheques
             </thead>
             <tbody>
                 {% for ob in object_list %}
-                <tr {% if ob.cheque_status == 'P' %}
-                    class="table-success"
-                    {% elif ob.cheque_status == 'U' %}
-                    class="table-danger"
-                    {% else %}
-                    class="table-warning"
-                    {% endif %}>
+                <tr>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{ob.date_debited}}</td>
                     <td><a class="text-dark"
@@ -103,36 +97,23 @@ Cheques
                     </td>
                     <td>{{ob.returned|upper}}</td>
                     <td>${{ob.chq_amount|intcomma}}</td>
-                    <td><a class="text-decoration-none small"
+                    <td><a class="btn btn-sm btn-outline-dark"
                             data-bs-toggle="modal"
-                            data-bs-target="#exampleModal{{ob.pk}}"
+                            data-bs-target="#exampleModalJournal{{ob.pk}}"
                             href="{% url 'cheque-update-journal' ob.pk %}">
-                            {{ob.journal|default:"add journal"}}</a></td>
+                            {{ob.journal|default:"add"}}</a></td>
                     <td>{{ob.cheque_date}}</td>
                     <td><a class="text-dark"
                             href="{{ ob.get_absolute_url }}">{{ob.cheque_no|upper}}</a>
                     </td>
-                    {% if ob.cheque_status == 'P' %}
-                    <td><a title="paid"
-                            class="btn btn-sm btn-outline-dark"
-                            href="{% url 'cheque-returned' ob.pk %}">{{ob.cheque_status}}</a>
-                    </td>
-                    {% elif ob.cheque_status == 'R' %}
-                    <td><a title="returned"
-                            class="btn btn-sm btn-outline-dark"
-                            href="{% url 'cheque-paid' ob.pk %}">{{ob.cheque_status}}</a>
-                    </td>
-
-                    {% elif ob.cheque_status == 'U' %}
-                    <td><a title="unpaid"
-                            class="btn btn-sm btn-outline-dark"
-                            href="{% url 'cheque-returned' ob.pk %}">{{ob.cheque_status}}</a>
-                    </td>
-
-                    {% endif %}
+                    <td><a class="btn btn-sm btn-outline-dark"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModalStatus{{ob.pk}}"
+                            href="{% url 'cheque-update-status' ob.pk %}">
+                            {{ob.get_cheque_status_display}}</a></td>
                     <td>{{ob.receipt_no}}</td>
                     <td><a class="text-dark"
-                            href="">{{ob.ministry|upper}}</a></td>
+                            href="{{ob.ministry.get_absolute_url}}">{{ob.ministry|upper}}</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -143,7 +124,7 @@ Cheques
 {% for ob in object_list %}
 <!-- Modal -->
 <div class="modal fade"
-    id="exampleModal{{ob.pk}}"
+    id="exampleModalJournal{{ob.pk}}"
     tabindex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -175,6 +156,37 @@ Cheques
 </div>
 {% endfor %}
 
-
+{% for ob in object_list %}
+<!-- Modal -->
+<div class="modal fade"
+    id="exampleModalStatus{{ob.pk}}"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5"
+                    id="exampleModalLabel">{{ob.cheque_no|upper}}</h1>
+                <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'cheque-update-status' ob.pk %}"
+                    method="post">
+                    {% csrf_token %}
+                    {{cheque_status_form|crispy}}
+                    <div class="d-grid">
+                        <button class="btn btn-lg btn-outline-dark"
+                            type="submit">submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 
 {% endblock content %}
