@@ -11,6 +11,7 @@ Police Department
 Supply
 First District Court
 Second District Court
-Sub-Accountant Vieux Fort
+sub-accountant vieux-fort
 General Post Office
 Registry of Companies
+supreme court

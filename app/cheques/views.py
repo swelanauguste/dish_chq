@@ -51,7 +51,7 @@ class MinistryDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         all_cheques = Cheque.objects.filter(ministry=self.get_object().pk)
         paid_cheques = Cheque.objects.filter(
-            cheque_status="P", ministry=self.get_object().pk
+            cheque_status__name__icontains='paid', ministry=self.get_object().pk
         )
         total_amount = sum(cheque.chq_amount for cheque in all_cheques)
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
@@ -106,7 +106,7 @@ class OwnerDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         all_cheques = Cheque.objects.filter(owner=self.get_object().pk)
         paid_cheques = Cheque.objects.filter(
-            cheque_status="P", owner=self.get_object().pk
+            cheque_status__name__icontains='paid', owner=self.get_object().pk
         )
         total_amount = sum(cheque.chq_amount for cheque in all_cheques)
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
@@ -202,7 +202,7 @@ class ChequeListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         all_cheques = Cheque.objects.all()
-        paid_cheques = Cheque.objects.filter(cheque_status="P")
+        paid_cheques = Cheque.objects.filter(cheque_status__name__icontains='paid')
         total_amount = sum(cheque.chq_amount for cheque in all_cheques)
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
         context["total_amount"] = total_amount

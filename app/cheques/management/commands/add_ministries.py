@@ -1,13 +1,18 @@
+import csv
+
 from django.core.management.base import BaseCommand
 
-from ...models import Ministry
+from ...models import Owner
+
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        with open(f"static/docs/ministry_list.txt") as file:
-            for row in file:
-                name = row.replace("\n", "").strip().lower()
-                Ministry.objects.get_or_create(
+        with open(f"static/docs/chq_22_clean_8.csv", "r") as file:
+            reader = csv.reader(file)
+            next(reader)
+            for i, row in enumerate(reader):
+                name = row[2].replace("\n", "").lower()
+                Owner.objects.get_or_create(
                     name=name,
                 )
                 self.stdout.write(self.style.SUCCESS(f"{name} added"))

@@ -13,7 +13,7 @@ class ChequeCreateForm(forms.ModelForm):
             "is_deleted",
             "receipt_no",
             "journal",
-            "cheque_status",
+            # "cheque_status",
         ]
         widgets = {
             "date_debited": forms.TextInput(attrs={"type": "date"}),

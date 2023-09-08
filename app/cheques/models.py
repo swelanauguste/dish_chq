@@ -57,10 +57,28 @@ class Ministry(models.Model):
     class Meta:
         ordering = ["name"]
         verbose_name_plural = "Ministries"
-        
+
     def get_absolute_url(self):
         return reverse("ministry-detail", kwargs={"pk": self.pk})
 
+    def __str__(self):
+        return self.name
+
+
+class ChequeStatus(models.Model):
+    """
+    Model for Cheque Status
+    """
+
+    name = models.CharField(max_length=255)
+    desc = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def get_absolute_url(self):
+        return reverse("cheque-status-detail", kwargs={"pk": self.pk})
+    
     def __str__(self):
         return self.name.upper()
 
@@ -70,11 +88,11 @@ class Cheque(models.Model):
     Model for Cheque
     """
 
-    CHEQUE_STATUS = (
-        ("P", "Paid"),
-        ("U", "Unpaid"),
-        ("R", "Returned"),
-    )
+    # CHEQUE_STATUS = (
+    #     ("P", "Paid"),
+    #     ("U", "Unpaid"),
+    #     ("R", "Returned"),
+    # )
     is_deleted = models.BooleanField(default=False)
     date_debited = models.DateField()
     owner = models.ForeignKey(
@@ -87,9 +105,10 @@ class Cheque(models.Model):
     journal = models.CharField(max_length=255, blank=True)
     cheque_date = models.DateField()
     cheque_no = models.CharField("cheque number", max_length=255)
-    cheque_status = models.CharField(
-        max_length=1, choices=CHEQUE_STATUS, default=CHEQUE_STATUS[1][0], blank=True
-    )
+    # cheque_status = models.CharField(
+    #     max_length=1, choices=CHEQUE_STATUS, default=CHEQUE_STATUS[1][0], blank=True
+    # )
+    cheque_status = models.ForeignKey(ChequeStatus, on_delete=models.PROTECT, related_name='cheque_statuses', null=True, blank=True, default=1)
     ministry = models.ForeignKey(
         Ministry,
         on_delete=models.CASCADE,

@@ -71,7 +71,7 @@ Cheques
     </div>
 
     <div class="table-responsive">
-        <table class="mt-3 table table-sm table-hover table-bordered">
+        <table class="mt-3 table table-sm table-hover table-bordered small">
             <thead>
                 <tr class="table-dark">
                     <th scope="col">#</th>
@@ -93,24 +93,24 @@ Cheques
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{ob.date_debited}}</td>
                     <td><a class="text-dark"
-                            href="{% url 'owner-detail' ob.owner.pk %}">{{ob.owner}}</a>
+                            href="{% url 'owner-detail' ob.owner.pk %}">{{ob.owner|truncatechars:20}}</a>
                     </td>
                     <td>{{ob.returned|upper}}</td>
                     <td>${{ob.chq_amount|intcomma}}</td>
-                    <td><a class="btn btn-sm btn-outline-dark"
+                    <td class="text-center"><a class="text-decoration-none text-dark"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModalJournal{{ob.pk}}"
                             href="{% url 'cheque-update-journal' ob.pk %}">
-                            {{ob.journal|default:"add"}}</a></td>
+                            {{ob.journal|default:"+"}}</a></td>
                     <td>{{ob.cheque_date}}</td>
                     <td><a class="text-dark"
                             href="{{ ob.get_absolute_url }}">{{ob.cheque_no|upper}}</a>
                     </td>
-                    <td><a class="btn btn-sm btn-outline-dark"
+                    <td><a class="text-dark"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModalStatus{{ob.pk}}"
                             href="{% url 'cheque-update-status' ob.pk %}">
-                            {{ob.get_cheque_status_display}}</a></td>
+                            {{ob.cheque_status|truncatechars:4}}</a></td>
                     <td>{{ob.receipt_no}}</td>
                     <td><a class="text-dark"
                             href="{{ob.ministry.get_absolute_url}}">{{ob.ministry|upper}}</a></td>
