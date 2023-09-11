@@ -8,6 +8,7 @@ from ...models import Cheque, ChequeStatus, Ministry, Owner, Returned
 
 
 class Command(BaseCommand):
+    Cheque.objects.all().delete()
     def handle(self, *args, **kwargs):
         with open(f"static/docs/chq_22_clean_8.csv", "r") as file:
             reader = csv.reader(file)
