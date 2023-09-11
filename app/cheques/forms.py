@@ -41,7 +41,8 @@ class ChequeAddJournalUpdateViewForm(forms.ModelForm):
 class ChequeStatusUpdateViewForm(forms.ModelForm):
     class Meta:
         model = Cheque
-        fields = ["cheque_status"]
+        # fields = ["cheque_status"]
+        fields = '__all__'
         widgets = {
             "cheque_date": forms.TextInput(attrs={"type": "date"}),
         }
