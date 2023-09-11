@@ -78,7 +78,7 @@ class ChequeStatus(models.Model):
 
     def get_absolute_url(self):
         return reverse("cheque-status-detail", kwargs={"pk": self.pk})
-    
+
     def __str__(self):
         return self.name.upper()
 
@@ -108,7 +108,14 @@ class Cheque(models.Model):
     # cheque_status = models.CharField(
     #     max_length=1, choices=CHEQUE_STATUS, default=CHEQUE_STATUS[1][0], blank=True
     # )
-    cheque_status = models.ForeignKey(ChequeStatus, on_delete=models.PROTECT, related_name='cheque_statuses', null=True, blank=True, default=1)
+    cheque_status = models.ForeignKey(
+        ChequeStatus,
+        on_delete=models.PROTECT,
+        related_name="cheque_statuses",
+        null=True,
+        blank=True,
+        default=1,
+    )
     ministry = models.ForeignKey(
         Ministry,
         on_delete=models.CASCADE,
