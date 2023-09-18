@@ -202,7 +202,7 @@ class ChequeListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         all_cheques = Cheque.objects.all()
-        paid_cheques = Cheque.objects.filter(cheque_status__name__icontains='paid')
+        paid_cheques = Cheque.objects.filter(cheque_status__name__iexact='paid')
         total_amount = sum(cheque.chq_amount for cheque in all_cheques)
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
         context["total_amount"] = total_amount
