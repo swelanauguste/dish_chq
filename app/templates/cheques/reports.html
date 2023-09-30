@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% block head_title %}
+Reports
+{% endblock head_title %}
+
+
+{% block content %}
+<div class="container">
+    <h2>Cheque Dated</h2>
+    <hr>
+    <div class="p-3">
+        <form class="d-flex justify-content-center"
+            action="{% url 'export-to-csv' %}"
+            method="get">
+            <div class=" col-lg-2">
+                <select class="form-control"
+                    id="month"
+                    name="month">
+                    {% for month_num, month_name in month_choices %}
+                    <option value="{{ month_num }}">{{ month_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <select class="form-control mx-2"
+                    id="year"
+                    name="year">
+                    {% for year in year_choices %}
+                    <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <button class="btn btn-success mx-3"
+                    type="submit"><span class="material-symbols-outlined">
+                        download
+                    </span></button>
+            </div>
+        </form>
+        <hr>
+    </div>
+    <div class="col-lg-6 mx-auto my-lg-5">
+        <canvas id="chart"
+            width="50"
+            height="50"></canvas>
+    </div>
+    <div class="p-5 mx-auto border col-lg-6 rounded-4">
+        <h2>Filter</h2>
+        <hr>
+        <form action=""
+            method="get">
+            {{filter.form|crispy}}
+            <button type="submit"
+                class="btn btn-outline-dark">Filter</button>
+        </form>
+    </div>
+    <div class="my-5 col-lg-4 mx-auto p-5">
+        <h2>date_debited</h2>
+        <hr>
+        {% for obj in filter.qs %}
+        {{ obj.cheque_no }} - ${{ obj.chq_amount }} {{obj.date_debited}}<br />
+        <hr>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    let ctx = document.getElementById("chart").getContext("2d");
+    let q1 = '{{total_amount_q1}}';
+    let q2 = '{{total_amount_q2}}';
+    let q3 = '{{total_amount_q3}}';
+    let q4 = '{{total_amount_q4}}';
+    let q1Paid = '{{paid_cheque_total_amount_q1}}';
+    let q2Paid = '{{paid_cheque_total_amount_q2}}';
+    let q3Paid = '{{paid_cheque_total_amount_q3}}';
+    let q4Paid = '{{paid_cheque_total_amount_q4}}';
+    let q1Unpaid = '{{unpaid_cheque_total_amount_q1}}';
+    let q2Unpaid = '{{unpaid_cheque_total_amount_q2}}';
+    let q3Unpaid = '{{unpaid_cheque_total_amount_q3}}';
+    let q4Unpaid = '{{unpaid_cheque_total_amount_q4}}';
+    currentYear = new Date().getFullYear();
+    let chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: ["2022/Q1", "2022/Q2", "2022/Q3", "2022/Q4"],
+            datasets: [
+                {
+                    label: "Cheques",
+                    backgroundColor: "#79AEC8",
+                    borderColor: "#417690",
+                    data: [q1, q2, q3, q4]
+                },
+                {
+                    label: "Paid",
+                    backgroundColor: "#09AEC8",
+                    borderColor: "#417690",
+                    data: [q1Paid, q2Paid, q3Paid, q4Paid]
+                },
+                {
+                    label: "Upaid",
+                    backgroundColor: "#096EC8",
+                    borderColor: "#417690",
+                    data: [q1Unpaid, q2Unpaid, q3Unpaid, q4Unpaid]
+                },
+            ]
+        },
+        options: {
+            title: {
+                text: "Gross Volume in 2020",
+                display: true
+            }
+        }
+    });
+</script>
+{% endblock content %}
+{% block scripts %}
+<script>
+    $("#id_owner").select2();
+    $("#id_ministry").select2();
+
+</script>
+{% endblock scripts %}

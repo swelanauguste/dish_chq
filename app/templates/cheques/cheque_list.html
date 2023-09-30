@@ -12,19 +12,20 @@ Cheques
 {% block content %}
 
 <div class="p-5">
-
-    <div class="row">
-        <div class="col">
+    <!-- <div class="row">
+        <div class="col"
+            style="width: fit-content;">
             <div
-                class="h3 border border-3 border-primary rounded-4 p-5 text-primary text-center shadow">
+                class="border border-3 border-primary rounded-4 p-5 text-primary text-center shadow">
                 <span title="total">All Cheques</span>
                 <hr>
                 <span>${{total_amount|intcomma}}</span>
             </div>
         </div>
-        <div class="col">
+        <div class="col"
+            style="width: fit-content;">
             <div
-                class="h3 border border-3 border-success rounded-4 p-5 text-success text-center shadow">
+                class="border border-3 border-success rounded-4 p-5 text-success text-center shadow">
                 <span title="paid">
                     Paid
                 </span>
@@ -32,16 +33,17 @@ Cheques
                 <span>${{paid_cheque_total_amount|intcomma}}</span>
             </div>
         </div>
-        <div class="col">
+        <div class="col"
+            style="width: fit-content;">
             <div
-                class="h3 border border-3 border-warning rounded-4 p-5 text-warning text-center shadow">
+                class="border border-3 border-warning rounded-4 p-5 text-warning text-center shadow">
                 <span title="unpaid">Unpaid/Returned</span>
                 <hr>
                 <span>
                     ${{paid_cheque_total_amount|subtract:total_amount|intcomma}}</span>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="d-flex justify-content-center p-5">
         <div class="mx-5 pt-2">
             <a title="add cheque"
@@ -69,7 +71,23 @@ Cheques
         </div>
 
     </div>
-
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
     <div class="table-responsive">
         <table class="mt-3 table table-sm table-hover table-bordered small">
             <thead>
@@ -85,11 +103,12 @@ Cheques
                     <th scope="col">Status</th>
                     <th scope="col">Receipt No.</th>
                     <th scope="col">Ministry</th>
+                    <th scope="col">Days Elasped</th>
                 </tr>
             </thead>
             <tbody>
                 {% for ob in object_list %}
-                <tr>
+                <tr class="table-{{ob.get_cheque_status_colour}}">
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{ob.date_debited}}</td>
                     <td><a class="text-dark"
@@ -97,7 +116,8 @@ Cheques
                     </td>
                     <td>{{ob.returned|upper}}</td>
                     <td>${{ob.chq_amount|intcomma}}</td>
-                    <td class="text-center"><a class="text-decoration-none text-dark"
+                    <td class="text-center"><a
+                            class="text-decoration-none text-dark"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModalJournal{{ob.pk}}"
                             href="{% url 'cheque-update-journal' ob.pk %}">
@@ -113,11 +133,31 @@ Cheques
                             {{ob.cheque_status|truncatechars:4}}</a></td>
                     <td>{{ob.receipt_no}}</td>
                     <td><a class="text-dark"
-                            href="{{ob.ministry.get_absolute_url}}">{{ob.ministry|upper}}</a></td>
+                            href="{{ob.ministry.get_absolute_url}}">{{ob.ministry|upper}}</a>
+                    </td>
+                    <td>{{ob.get_days_outstanding}}</td>
+
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
     </div>
 </div>
 
@@ -187,6 +227,8 @@ Cheques
         </div>
     </div>
 </div>
+
 {% endfor %}
+
 
 {% endblock content %}

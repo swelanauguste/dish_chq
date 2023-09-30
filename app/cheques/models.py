@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
@@ -62,7 +64,7 @@ class Ministry(models.Model):
         return reverse("ministry-detail", kwargs={"pk": self.pk})
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class ChequeStatus(models.Model):
@@ -88,6 +90,7 @@ class Cheque(models.Model):
     Model for Cheque
     """
 
+    cheque = models.FileField(upload_to="cheques", null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
     date_debited = models.DateField()
     owner = models.ForeignKey(
@@ -135,5 +138,42 @@ class Cheque(models.Model):
     def get_absolute_url(self):
         return reverse("cheque-detail", kwargs={"pk": self.pk})
 
+    def get_days_outstanding(self):
+        return (self.date_debited - date.today()).days
+    
+    def get_cheque_status_colour(self):
+        if self.cheque_status.name == "paid":
+            return 'success'
+        return 'warning'
+
     def __str__(self):
         return self.cheque_no.upper()
+
+
+class ChequeComment(models.Model):
+    """
+    Cheque comment model
+    """
+
+    cheque = models.ForeignKey(
+        Cheque, on_delete=models.PROTECT, related_name="comments"
+    )
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="comment_created",
+    )
+    upated_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="comment_updated",
+    )
+    
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"{self.cheque.cheque_no} - {self.comment}"

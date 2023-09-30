@@ -1,11 +1,13 @@
 from django.contrib import admin
 
-from .models import Cheque, Ministry, Owner, Returned, ChequeStatus
+from .models import Cheque, Ministry, Owner, Returned, ChequeStatus, ChequeComment
 
 admin.site.register(Owner)
 # admin.site.register(Returned)
 admin.site.register(Ministry)
 admin.site.register(ChequeStatus)
+
+admin.site.register(ChequeComment)
 
 
 

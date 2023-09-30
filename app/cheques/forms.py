@@ -1,6 +1,15 @@
 from django import forms
 
-from .models import Cheque
+from .models import Cheque, ChequeComment
+
+class ChequeCommentCreateForm(forms.ModelForm):
+    class Meta:
+        model = ChequeComment
+        fields = ["comment"]
+        exclude = ['created_by', 'updated_by']
+        widgets = {
+            "comment": forms.Textarea(attrs={"rows": 3}),
+        }
 
 
 class ChequeCreateForm(forms.ModelForm):

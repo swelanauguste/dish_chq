@@ -12,6 +12,14 @@
 
 {% block content %}
 <div class="p-lg-5">
+
+    {% if object.cheque %}
+    <div class="text-center mb-5">
+        <img src="{{object.cheque.url}}"
+            alt="{{object.cheque.url}}">
+    </div>
+    {% endif %}
+
     <div class="col-lg-6 mx-auto shadow p-5 rounded-4">
         <h1>{{object|upper}}</h1>
         <hr>
@@ -69,17 +77,44 @@
             </div>
             <br>
         </div>
+        <div>
+            <div class="d-flex justify-content-lg-start">
+                <p>Comments: </p><a title="add comment"
+                    class="text-dark"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal{{object.pk}}"
+                    href="#"><span class="material-symbols-outlined mx-3">
+                        add_circle
+                    </span></a>
+            </div>
+         
+            {% if object.comments.all %}
+            <div class="border rounded-4 px-5 py-3 mx-5">
+                {% for comment in object.comments.all %}
+                <div>
+                    <span>{{comment.comment}}</span>
+                    <div class="text-end">
+                        <span
+                            class="small text-muted">{{comment.created_by.profile}}
+                            | {{comment.created_at}}</span>
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
         <div class="my-3 text-end">
-            <a 
-                href="{% url 'cheque-update' object.pk %}"><span
+            <a href="{% url 'cheque-update' object.pk %}"><span
                     class="material-symbols-outlined fs-1 text-warning">
                     edit
                 </span></a>
         </div>
         {% if request.user.is_supervisor %}
-        <a href="{% url 'cheque-delete' object.pk %}"><span class="material-symbols-outlined fs-1 text-danger">
+        <a href="{% url 'cheque-delete' object.pk %}"><span
+                class="material-symbols-outlined fs-1 text-danger">
                 delete_forever
-                </span></a>
+            </span></a>
     </div>
     {% endif %}
     <hr>
@@ -87,6 +122,43 @@
         <p>Updated at {{object.updated_at}}</p>
     </div>
 </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade"
+    id="exampleModal{{object.pk}}"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5"
+                    id="exampleModalLabel">Add comment</h1>
+                <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <form action="{% url 'cheque-create-comment' object.pk %}"
+                method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {{form|crispy}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="submit"
+                        class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
 </div>
 
 {% endblock content %}

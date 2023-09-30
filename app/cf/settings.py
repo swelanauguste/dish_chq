@@ -1,9 +1,17 @@
 import os
 from pathlib import Path
 
+# from dotenv import load_dotenv
+
+# load_dotenv()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -13,10 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", default=0))
+# DEBUG = bool(os.environ.get("DEBUG", default=0))
+DEBUG = True
 
 # ALLOWED_HOSTS = ["localhost", "dis-chq.kingship.info"]
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 
 CSRF_TRUSTED_ORIGINS = ["https://dis-chq.kingship.info"]
@@ -38,6 +47,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "django_filters",
     "request",
     "cheques",
     "users",
@@ -178,11 +188,11 @@ if DEBUG == False:
     MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
     MINIO_STORAGE_USE_HTTPS = True
     MINIO_STORAGE_MEDIA_OBJECT_METADATA = {"Cache-Control": "max-age=1000"}
-    MINIO_STORAGE_MEDIA_BUCKET_NAME = 'dishchq-1-mediafiles'
-    MINIO_STORAGE_MEDIA_BACKUP_BUCKET = 'Recycle Bin'
-    MINIO_STORAGE_MEDIA_BACKUP_FORMAT = '%c/'
+    MINIO_STORAGE_MEDIA_BUCKET_NAME = "dishchq-1-mediafiles"
+    MINIO_STORAGE_MEDIA_BACKUP_BUCKET = "Recycle Bin"
+    MINIO_STORAGE_MEDIA_BACKUP_FORMAT = "%c/"
     MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
-    MINIO_STORAGE_STATIC_BUCKET_NAME = 'dishchq-1-staticfiles'
+    MINIO_STORAGE_STATIC_BUCKET_NAME = "dishchq-1-staticfiles"
     MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
 
 ######################
