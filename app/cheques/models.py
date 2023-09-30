@@ -90,7 +90,7 @@ class Cheque(models.Model):
     Model for Cheque
     """
 
-    cheque = models.FileField(upload_to="cheques", null=True, blank=True)
+    cheque_scan = models.FileField(upload_to="cheques", null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
     date_debited = models.DateField()
     owner = models.ForeignKey(

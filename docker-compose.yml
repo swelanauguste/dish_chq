@@ -11,17 +11,15 @@ services:
     env_file:
       - ./.env
     restart: unless-stopped
-  #   depends_on:
-  #     - 10.10.10.200
-  # db:
-  #   image: postgres:15
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data/
-  #   environment:
-  #     - POSTGRES_USER=dishchq
-  #     - POSTGRES_PASSWORD=dishchq
-  #     - POSTGRES_DB=dishchq
-  #   restart: always
+    depends_on:
+      - db
+  db:
+    image: postgres:16.0
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    restart: always
 
-# volumes:
-#   postgres_data:
+volumes:
+  postgres_data:
