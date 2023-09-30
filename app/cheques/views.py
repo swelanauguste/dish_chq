@@ -30,7 +30,7 @@ from .forms import (
 from .models import Cheque, Ministry, Owner, Returned
 
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     # Initialize lists to store data for each quarter
     cheques_by_quarter = []
     total_amount_by_quarter = []
@@ -53,7 +53,7 @@ class DashboardView(TemplateView):
         cheques_by_quarter.append(cheques)
         total_amount_by_quarter.append(total_amount)
         paid_cheque_total_amount_by_quarter.append(paid_cheque_total_amount)
-        
+
     current_year = datetime.now().year - 1
     all_paid_cheques = Cheque.objects.filter(
         date_debited__year=current_year,

@@ -1,7 +1,6 @@
 from django.urls import path
 from django_filters.views import FilterView
 
-from .models import Cheque
 from .views import (
     ChequeAddJournalUpdateView,
     ChequeCreateView,
