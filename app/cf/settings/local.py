@@ -2,7 +2,7 @@ from .base import *
 
 SECRET_KEY = "django-insecure-410rdl2nv&n!cgv%wgg)+zvlzeo%_u2mer3eq-!7*&dwoo#s(w"
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["*"]
 
 DATABASES = {
     "default": {
