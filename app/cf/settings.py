@@ -177,8 +177,8 @@ else:
 # storage_settings
 #######################
 if DEBUG == False:
-    DEFAULT_FILE_STORAGE = minio_storage.storage.MinioMediaStorage
-    STATICFILES_STORAGE = minio_storage.storage.MinioStaticStorage
+    DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+    STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
     MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
     MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY")
     MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
