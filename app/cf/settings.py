@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "django_filters",
     "request",
-    "cheques",
+    # "cheques",
     "users",
 ]
 
