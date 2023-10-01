@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     "django_filters",
     "minio_storage",
     "request",
-    "cheques",
+    # "cheques",
     "users",
 ]
 
