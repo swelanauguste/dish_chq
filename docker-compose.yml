@@ -6,8 +6,21 @@ services:
     command: gunicorn cf.wsgi:application --bind 0.0.0.0:8020
     volumes:
       - ./app/:/usr/src/app/
-    ports:
-      - 8020:8020
+    # ports:
+    #   - 8020:8020
+    expose:
+      - 8020
     env_file:
       - ./.env
     restart: unless-stopped
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+
+volumes:
+  postgres_data:
