@@ -1,0 +1,62 @@
+<div class="col-lg-6 mx-auto my-lg-5">
+    <canvas id="chart"
+        width="50"
+        height="50"></canvas>
+</div>
+
+<script>
+    let ctx = document.getElementById("chart").getContext("2d");
+    let q1 = '{{total_amount_q1}}';
+    let q2 = '{{total_amount_q2}}';
+    let q3 = '{{total_amount_q3}}';
+    let q4 = '{{total_amount_q4}}';
+    let q1Paid = '{{paid_cheque_total_amount_q1}}';
+    let q2Paid = '{{paid_cheque_total_amount_q2}}';
+    let q3Paid = '{{paid_cheque_total_amount_q3}}';
+    let q4Paid = '{{paid_cheque_total_amount_q4}}';
+    let q1Unpaid = '{{unpaid_cheque_total_amount_q1}}';
+    let q2Unpaid = '{{unpaid_cheque_total_amount_q2}}';
+    let q3Unpaid = '{{unpaid_cheque_total_amount_q3}}';
+    let q4Unpaid = '{{unpaid_cheque_total_amount_q4}}';
+    currentYear = new Date().getFullYear();
+    let chart = new Chart(ctx, {
+        data: {
+            labels: ["2022/Q1", "2022/Q2", "2022/Q3", "2022/Q4"],
+            datasets: [
+                {
+                    type: "bar",
+                    stacked: true,
+                    label: "Cheques",
+                    backgroundColor: "grey",
+                    data: [q1, q2, q3, q4]
+                },
+
+                {
+                    type: "bar",
+                    label: "Paid",
+                    backgroundColor: "green",
+                    borderColor: "#417690",
+                    data: [q1Paid, q2Paid, q3Paid, q4Paid]
+                },
+                {
+                    type: "bar",
+
+                    label: "Upaid",
+                    backgroundColor: "orange",
+                    borderColor: "#417690",
+                    data: [q1Unpaid, q2Unpaid, q3Unpaid, q4Unpaid]
+                },
+            ]
+        },
+        options: {
+            plugins: {
+                title: {
+                    text: "Gross Volume in 2020",
+                    display: true
+                }
+            },
+
+        }
+    });
+
+</script>

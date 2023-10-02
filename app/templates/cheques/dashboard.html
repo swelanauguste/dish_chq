@@ -22,27 +22,23 @@ Dishonored Cheque - {{request.user}}
             <hr>
             <div class="col">
                 <span class="text-muted fw-bolder fs-5">All</span><br>
-                <span class="fs-4">XCD${{all_paid_cheques|intcomma}}</span>
+                <span class="fs-4">XCD${{total_sum_of_cheques|intcomma}}</span>
             </div>
             <div class="col">
                 <span class="text-muted fw-bolder fs-5">Paid</span><br>
                 <span
-                    class="fs-4">XCD${{all_paid_cheques_total|intcomma}}</span>
+                    class="fs-4">XCD${{total_sum_of_paid_cheques|intcomma}}</span>
             </div>
             <div class="col">
                 <span class="text-muted fw-bolder fs-5">Unpaid</span><br>
                 <span
-                    class="fs-4">XCD${{all_paid_cheques_total|subtract:all_paid_cheques|intcomma}}</span>
+                    class="fs-4">XCD${{total_sum_of_unpaid_cheques|intcomma}}</span>
             </div>
         </div>
     </div><br><br>
     <hr><br><br>
     <div class="row">
-        <div class="col-lg-6 mx-auto my-lg-5">
-            <canvas id="chart"
-                width="50"
-                height="50"></canvas>
-        </div>
+        {% include 'cheques/chart2022.html' %}
         <div class="col">
             <div class="p-3"><br><br>
                 <hr>
@@ -85,61 +81,8 @@ Dishonored Cheque - {{request.user}}
 {% endblock content %}
 
 {% block scripts %}
-
 <script>
-    let ctx = document.getElementById("chart").getContext("2d");
-    let q1 = '{{total_amount_q1}}';
-    let q2 = '{{total_amount_q2}}';
-    let q3 = '{{total_amount_q3}}';
-    let q4 = '{{total_amount_q4}}';
-    let q1Paid = '{{paid_cheque_total_amount_q1}}';
-    let q2Paid = '{{paid_cheque_total_amount_q2}}';
-    let q3Paid = '{{paid_cheque_total_amount_q3}}';
-    let q4Paid = '{{paid_cheque_total_amount_q4}}';
-    let q1Unpaid = '{{unpaid_cheque_total_amount_q1}}';
-    let q2Unpaid = '{{unpaid_cheque_total_amount_q2}}';
-    let q3Unpaid = '{{unpaid_cheque_total_amount_q3}}';
-    let q4Unpaid = '{{unpaid_cheque_total_amount_q4}}';
-    currentYear = new Date().getFullYear();
-    let chart = new Chart(ctx, {
-        data: {
-            labels: ["2022/Q1", "2022/Q2", "2022/Q3", "2022/Q4"],
-            datasets: [
-                {
-                    type: "bar",
-                    label: "Cheques",
-                    backgroundColor: "grey",
-                    data: [q1, q2, q3, q4]
-                },
-
-                {
-                    type: "bar",
-
-                    label: "Paid",
-                    backgroundColor: "green",
-                    borderColor: "#417690",
-                    data: [q1Paid, q2Paid, q3Paid, q4Paid]
-                },
-                {
-                    type: "bar",
-
-                    label: "Upaid",
-                    backgroundColor: "orange",
-                    borderColor: "#417690",
-                    data: [q1Unpaid, q2Unpaid, q3Unpaid, q4Unpaid]
-                },
-            ]
-        },
-        options: {
-            title: {
-                text: "Gross Volume in 2020",
-                display: true
-            }
-        }
-    });
-
     $("#id_owner").select2();
     $("#id_ministry").select2();
-
 </script>
 {% endblock scripts %}

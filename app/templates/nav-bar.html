@@ -18,8 +18,6 @@
             class="nav-link px-2 link-body-emphasis">Owners</a></li>
         <li><a href="{% url 'ministry-list' %}"
             class="nav-link px-2 link-body-emphasis">Ministries</a></li>
-        <li><a href="{% url 'reports' %}"
-            class="nav-link px-2 link-body-emphasis">Reports</a></li>
         {% if request.user.is_supervisor %}
         <li><a href="{% url 'profile-list' %}"
             class="nav-link px-2 link-body-emphasis">Users</a></li>

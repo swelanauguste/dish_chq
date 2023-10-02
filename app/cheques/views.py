@@ -32,6 +32,7 @@ from .models import Cheque, Ministry, Owner, Returned
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     # Initialize lists to store data for each quarter
+    extra_context = {}
     cheques_by_quarter = []
     total_amount_by_quarter = []
     paid_cheque_total_amount_by_quarter = []
@@ -59,14 +60,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         date_debited__year=current_year,
         cheque_status__name__iexact="paid",
     )
-    extra_context = {
-        "all_paid_cheques": sum(
-            cheque.chq_amount
-            for cheque in Cheque.objects.filter(date_debited__year=(current_year))
-        ),
-        "all_paid_cheques_total": sum(cheque.chq_amount for cheque in all_paid_cheques),
-        "current_year": current_year,
-    }
+    extra_context["current_year"] = current_year
     extra_context["month_choices"] = [
         (i, datetime(2000, i, 1).strftime("%B")) for i in range(1, 13)
     ]

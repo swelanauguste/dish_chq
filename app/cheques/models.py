@@ -1,4 +1,5 @@
-from datetime import date
+# from datetime import date, datetime, timedelta
+import datetime
 
 from django.db import models
 from django.db.models import Sum
@@ -139,12 +140,12 @@ class Cheque(models.Model):
         return reverse("cheque-detail", kwargs={"pk": self.pk})
 
     def get_days_outstanding(self):
-        return (self.date_debited - date.today()).days
-    
+        return (self.date_debited - datetime.date.today()).days
+
     def get_cheque_status_colour(self):
         if self.cheque_status.name == "paid":
-            return 'success'
-        return 'warning'
+            return "success"
+        return "warning"
 
     def __str__(self):
         return self.cheque_no.upper()
@@ -171,7 +172,7 @@ class ChequeComment(models.Model):
         on_delete=models.PROTECT,
         related_name="comment_updated",
     )
-    
+
     class Meta:
         ordering = ("-created_at",)
 
