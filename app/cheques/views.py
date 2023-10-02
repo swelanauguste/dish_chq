@@ -110,7 +110,7 @@ def export_to_csv(request):
     for cheque in cheques:
         writer.writerow(
             [
-                cheque.cheque,
+                cheque.cheque_scan,
                 cheque.date_debited,
                 cheque.owner.name,
                 cheque.returned.name,
