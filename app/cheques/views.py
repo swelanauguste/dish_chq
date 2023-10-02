@@ -64,7 +64,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     extra_context["month_choices"] = [
         (i, datetime(2000, i, 1).strftime("%B")) for i in range(1, 13)
     ]
-    extra_context["year_choices"] = range(current_year - 1, current_year)
+    extra_context["year_choices"] = range(current_year - 1, current_year + 2)
     for i, quarter in enumerate(["Q1", "Q2", "Q3", "Q4"]):
         extra_context[f"cheques_q{i + 1}"] = cheques_by_quarter[i]
         extra_context[f"total_amount_q{i + 1}"] = total_amount_by_quarter[i]
