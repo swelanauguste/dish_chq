@@ -2,14 +2,13 @@ from django.urls import path
 from django_filters.views import FilterView
 
 from .views import (
-    ChequeAddJournalUpdateView,
+    ChequeAddJournalUpdateView,  # DashboardView,
     ChequeCreateView,
     ChequeDeleteView,
     ChequeDetailView,
     ChequeListView,
     ChequeStatusChangeUpdateView,
     ChequeUpdateView,
-    DashboardView,
     MinistryCreateView,
     MinistryDetailView,
     MinistryListView,
@@ -26,8 +25,8 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", DashboardView.as_view(), name="dashboard"),
-    path("cheques/", ChequeListView.as_view(), name="cheque-list"),
+    # path("", DashboardView.as_view(), name="dashboard"),
+    path("", ChequeListView.as_view(), name="cheque-list"),
     path("cheque/create/", ChequeCreateView.as_view(), name="cheque-create"),
     path("cheque/update/<int:pk>/", ChequeUpdateView.as_view(), name="cheque-update"),
     path("cheque/detail/<int:pk>/", ChequeDetailView.as_view(), name="cheque-detail"),

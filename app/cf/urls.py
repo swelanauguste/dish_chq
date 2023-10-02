@@ -2,9 +2,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-
+from cheques.views import DashboardView
 urlpatterns = [
-    path("", include("cheques.urls")),
+    path("", DashboardView.as_view(), name='dashboard'),
+    path("cheques", include("cheques.urls")),
     path("users/", include("users.urls")),
     path("accounts/", include("allauth.urls")),
     path("admin/", admin.site.urls),
