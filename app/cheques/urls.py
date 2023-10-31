@@ -1,14 +1,31 @@
 from django.urls import path
 from django_filters.views import FilterView
 
-from .views import (ChequeAddJournalUpdateView, ChequeCreateView,
-                    ChequeDeleteView, ChequeDetailView, ChequeListView,
-                    ChequeStatusChangeUpdateView, ChequeUpdateView,
-                    DashboardView, MinistryCreateView, MinistryDetailView,
-                    MinistryListView, MinistryUpdateView, OwnerCreateView,
-                    OwnerDetailView, OwnerListView, OwnerUpdateView,
-                    ReportView, ReturnedCreateView, ReturnedUpdateView,
-                    cheque_comment_create_view, export_to_csv)
+from .views import (
+    ChequeAddJournalUpdateView,
+    ChequeCreateView,
+    ChequeDeleteView,
+    ChequeDetailView,
+    ChequeListView,
+    ChequeStatusChangeUpdateView,
+    ChequeStatusUpdateView,
+    ChequeUpdateView,
+    DashboardView,
+    ExportMinistryCSVView,
+    MinistryCreateView,
+    MinistryDetailView,
+    MinistryListView,
+    MinistryUpdateView,
+    OwnerCreateView,
+    OwnerDetailView,
+    OwnerListView,
+    OwnerUpdateView,
+    ReportView,
+    ReturnedCreateView,
+    ReturnedUpdateView,
+    cheque_comment_create_view,
+    export_to_csv,
+)
 
 urlpatterns = [
     path("", DashboardView.as_view(), name="dashboard"),
@@ -26,6 +43,11 @@ urlpatterns = [
         "cheque/status/update/<int:pk>/",
         ChequeStatusChangeUpdateView.as_view(),
         name="cheque-update-status",
+    ),
+    path(
+        "cheque/update_cheque_status/<int:cheque_id>/",
+        ChequeStatusUpdateView.as_view(),
+        name="update_cheque_status",
     ),
     path(
         "cheque/create/<int:pk>/",
@@ -56,4 +78,9 @@ urlpatterns = [
     ),
     path("reports/", ReportView.as_view(), name="reports"),
     path("reports/export-to-csv", export_to_csv, name="export-to-csv"),
+    path(
+        "reports/ministry-export-to-csv",
+        ExportMinistryCSVView.as_view(),
+        name="ministry-export-to-csv",
+    ),
 ]

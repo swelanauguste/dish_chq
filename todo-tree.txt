@@ -1,0 +1,31 @@
+// TODO
+#processsing fee for each dishonored cheque $60.00
+email report to minitry on demand
+email report to customer where possible on demand
+add time elasped on excel report
+add report interval success rating
+add user manual help buttom to PDF??
+add customer/owner blacklist/watchlist - Manager to update customer/owner watchlist status
+request no reply-email from GITS
+replace pk with slugs
+
+
+// REPORTS
+each quarter
+bi-annual
+annaully
+
+// ROLES
+Inventment Bank
+    Supervisor - 
+        ONLY can change cheque to paid
+        ONLY can add users
+        add comments to cheques and customers, view comments on owners/customers
+        general reports on demand for Customer/Owner Ministry, Paid and update cheques
+    Manager
+        ONLY can add users
+        add comments to cheques and customers, view comments on owners/customers
+    Clerk - add cheques, return cheques to ministry, add comments to cheques and customers, view comments on owners/customers
+
+Accountant General - Viewing reports
+Ministry's accountant - Viewing respective minitry's report

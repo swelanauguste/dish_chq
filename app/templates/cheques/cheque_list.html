@@ -130,7 +130,7 @@ Cheques
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModalStatus{{ob.pk}}"
                             href="{% url 'cheque-update-status' ob.pk %}">
-                            {{ob.cheque_status|truncatechars:4}}</a></td>
+                            {{ob.get_cheque_status|truncatechars:4}}</a></td>
                     <td>{{ob.receipt_no}}</td>
                     <td><a class="text-dark"
                             href="{{ob.ministry.get_absolute_url}}">{{ob.ministry|upper}}</a>
@@ -214,7 +214,7 @@ Cheques
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'cheque-update-status' ob.pk %}"
+                <form action="{% url 'update_cheque_status' ob.id %}"
                     method="post">
                     {% csrf_token %}
                     {{cheque_status_form|crispy}}

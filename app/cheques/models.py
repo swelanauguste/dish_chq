@@ -68,22 +68,13 @@ class Ministry(models.Model):
         return self.name.title()
 
 
-class ChequeStatus(models.Model):
-    """
-    Model for Cheque Status
-    """
-
-    name = models.CharField(max_length=255)
+class Fee(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    price = models.PositiveIntegerField(default=0)
     desc = models.TextField(blank=True)
 
-    class Meta:
-        ordering = ["name"]
-
-    def get_absolute_url(self):
-        return reverse("cheque-status-detail", kwargs={"pk": self.pk})
-
     def __str__(self):
-        return self.name.upper()
+        return f"{self.name} - ${self.price}"
 
 
 class Cheque(models.Model):
@@ -100,17 +91,13 @@ class Cheque(models.Model):
         related_name="cheques",
     )
     returned = models.ForeignKey(Returned, on_delete=models.CASCADE, default=1)
+    fee = models.ForeignKey(
+        Fee, on_delete=models.PROTECT, related_name="fees", blank=True, null=True
+    )
     chq_amount = models.DecimalField("cheque amount", max_digits=10, decimal_places=2)
     journal = models.CharField(max_length=255, blank=True)
     cheque_date = models.DateField()
     cheque_no = models.CharField("cheque number", max_length=255)
-    cheque_status = models.ForeignKey(
-        ChequeStatus,
-        on_delete=models.PROTECT,
-        related_name="cheque_statuses",
-        null=True,
-        blank=True,
-    )
     ministry = models.ForeignKey(
         Ministry,
         on_delete=models.CASCADE,
@@ -140,15 +127,65 @@ class Cheque(models.Model):
         return reverse("cheque-detail", kwargs={"pk": self.pk})
 
     def get_days_outstanding(self):
-        return (self.date_debited - datetime.date.today()).days
+        if self.get_cheque_status and self.get_cheque_status == "paid":
+            return (self.cheque_status.updated_at.date() - self.date_debited).days
+        return (datetime.date.today() - self.date_debited).days
 
     def get_cheque_status_colour(self):
-        if self.cheque_status.name == "paid":
+        status = self.get_cheque_status()
+        if status and status.name == "paid":
             return "success"
         return "warning"
 
+    def get_cheque_status(self):
+        try:
+            latest_status_update = self.cheques_statuses.latest("updated_at")
+            return latest_status_update.cheque_status
+        except ChequeStatusUpdate.DoesNotExist:
+            return None
+
     def __str__(self):
         return self.cheque_no.upper()
+
+
+class ChequeStatus(models.Model):
+    """
+    Model for Cheque Status
+    """
+
+    name = models.CharField(max_length=255)
+    desc = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    # def get_absolute_url(self):
+    #     return reverse("cheque-status-detail", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return self.name.upper()
+
+
+class ChequeStatusUpdate(models.Model):
+    """
+    Model for Cheque Status
+    """
+
+    cheque = models.ForeignKey(
+        Cheque, on_delete=models.PROTECT, related_name="cheques_statuses"
+    )
+    cheque_status = models.ForeignKey(
+        ChequeStatus, on_delete=models.PROTECT, related_name="statuses"
+    )
+    details = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # def get_absolute_url(self):
+    #     return reverse("cheque-status-detail", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return self.cheque_status.name.upper()
 
 
 class ChequeComment(models.Model):

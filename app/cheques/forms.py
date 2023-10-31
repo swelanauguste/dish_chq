@@ -1,12 +1,13 @@
 from django import forms
 
-from .models import Cheque, ChequeComment
+from .models import Cheque, ChequeComment, ChequeStatusUpdate
+
 
 class ChequeCommentCreateForm(forms.ModelForm):
     class Meta:
         model = ChequeComment
         fields = ["comment"]
-        exclude = ['created_by', 'updated_by']
+        exclude = ["created_by", "updated_by"]
         widgets = {
             "comment": forms.Textarea(attrs={"rows": 3}),
         }
@@ -49,5 +50,10 @@ class ChequeAddJournalUpdateViewForm(forms.ModelForm):
 
 class ChequeStatusUpdateViewForm(forms.ModelForm):
     class Meta:
-        model = Cheque
+        model = ChequeStatusUpdate
         fields = ["cheque_status"]
+
+class ChequeStatusUpdateForm(forms.ModelForm):
+    class Meta:
+        model = ChequeStatusUpdate
+        fields = ['cheque_status', 'details']

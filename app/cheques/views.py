@@ -10,24 +10,85 @@ from django.db.models import Q, Sum
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    TemplateView,
-    UpdateView,
-)
+from django.views import View
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  TemplateView, UpdateView)
 
 from .filters import ChequeFilter
-from .forms import (
-    ChequeAddJournalUpdateViewForm,
-    ChequeCommentCreateForm,
-    ChequeCreateForm,
-    ChequeStatusUpdateViewForm,
-    ChequeUpdateForm,
-)
-from .models import Cheque, Ministry, Owner, Returned
+from .forms import (ChequeAddJournalUpdateViewForm, ChequeCommentCreateForm,
+                    ChequeCreateForm, ChequeStatusUpdateForm,
+                    ChequeStatusUpdateViewForm, ChequeUpdateForm)
+from .models import Cheque, ChequeStatusUpdate, Ministry, Owner, Returned
+
+
+def get_quarter_start_end_dates(year, quarter):
+    quarter_starts = [(1, 1), (4, 1), (7, 1), (10, 1)]
+    quarter_ends = [(3, 31), (6, 30), (9, 30), (12, 31)]
+    return date(year, *quarter_starts[quarter - 1]), date(
+        year, *quarter_ends[quarter - 1]
+    )
+
+
+class ExportMinistryCSVView(View):
+    def get(self, request):
+        # Retrieve data based on your filters (quarters, bi-annual, ministry, etc.)
+        # For example, if you want to filter by ministry:
+        ministry_id = request.GET.get("ministry_id")
+        quarter = request.GET.get("quarter")
+        cheques = Cheque.objects.filter(ministry__id=ministry_id)
+
+        if year and quarter:
+            year = int(year)
+            quarter = int(quarter)
+
+            start_date, end_date = get_quarter_start_end_dates(year, quarter)
+
+            # Filter Cheques based on date_debited falling within the selected quarter
+            cheques = Cheque.objects.filter(date_debited__range=(start_date, end_date))
+        else:
+            # If year and/or quarter is not provided, return all Cheques
+            cheques = Cheque.objects.all()
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="cheques.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(
+            [
+                "cheque",
+                "date_debited",
+                "owner",
+                "returned",
+                "journal",
+                "cheque_date",
+                "cheque_no",
+                "get_cheque_status",
+                "receipt_no",
+                "created_at",
+                "created_by",
+                "days_outstanding",
+            ]
+        )
+
+        for cheque in cheques:
+            writer.writerow(
+                [
+                    cheque.cheque_scan,
+                    cheque.date_debited,
+                    cheque.owner.name,
+                    cheque.returned.name,
+                    cheque.journal,
+                    cheque.cheque_date,
+                    cheque.cheque_no,
+                    cheque.get_cheque_status,
+                    cheque.receipt_no,
+                    cheque.created_at,
+                    cheque.created_by,
+                    cheque.get_days_outstanding(),
+                ]
+            )
+
+        return response
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -44,7 +105,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     ]
     for start_date, end_date in quarters:
         cheques = Cheque.objects.filter(date_debited__range=(start_date, end_date))
-        paid_cheques = cheques.filter(cheque_status__name__iexact="paid")
+        paid_cheques = Cheque.objects.filter(
+            cheques_statuses__cheque_status__name__iexact="paid",
+            date_debited__year=2022,
+        )
 
         total_amount = sum(cheque.chq_amount for cheque in cheques)
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
@@ -57,8 +121,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     current_year = datetime.now().year - 1
     all_paid_cheques = Cheque.objects.filter(
-        date_debited__year=current_year,
-        cheque_status__name__iexact="paid",
+        cheques_statuses__cheque_status__name__iexact="paid", date_debited__year=2022
     )
     extra_context["current_year"] = current_year
     extra_context["month_choices"] = [
@@ -98,7 +161,7 @@ def export_to_csv(request):
             "journal",
             "cheque_date",
             "cheque_no",
-            "cheque_status",
+            "get_cheque_status",
             "ministry",
             "receipt_no",
             "created_at",
@@ -117,7 +180,7 @@ def export_to_csv(request):
                 cheque.journal,
                 cheque.cheque_date,
                 cheque.cheque_no,
-                cheque.cheque_status.name,
+                cheque.get_cheque_status,
                 cheque.ministry.name,
                 cheque.receipt_no,
                 cheque.created_at,
@@ -243,7 +306,8 @@ class MinistryDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         all_cheques = Cheque.objects.filter(ministry=self.get_object().pk)
         paid_cheques = Cheque.objects.filter(
-            cheque_status__name__icontains="paid", ministry=self.get_object().pk
+            cheques_statuses__cheque_status__name__iexact="paid",
+            ministry=self.get_object().pk,
         )
         total_amount = sum(cheque.chq_amount for cheque in all_cheques)
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
@@ -298,7 +362,8 @@ class OwnerDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         all_cheques = Cheque.objects.filter(owner=self.get_object().pk)
         paid_cheques = Cheque.objects.filter(
-            cheque_status__name__icontains="paid", owner=self.get_object().pk
+            cheques_statuses__cheque_status__name__iexact="paid",
+            owner=self.get_object().pk,
         )
         total_amount = sum(cheque.chq_amount for cheque in all_cheques)
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
@@ -373,6 +438,21 @@ class ChequeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return super().form_valid(form)
 
 
+class ChequeStatusUpdateView(UpdateView):
+    model = Cheque
+    form_class = ChequeStatusUpdateForm
+    # template_name = "update_cheque_status.html"
+    pk_url_kwarg = (
+        "cheque_id"  # Specify the name of the URL parameter for the primary key
+    )
+    
+    def get_object(self, queryset=None):
+        return get_object_or_404(ChequeStatusUpdate, cheque_id=self.kwargs['cheque_id'])
+
+    def get_success_url(self):
+        return reverse("cheque-detail", kwargs={"pk": self.object.cheque_id})
+
+
 class ChequeAddJournalUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Cheque
     fields = ["journal"]
@@ -403,14 +483,15 @@ class ChequeListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         all_cheques = Cheque.objects.filter(date_debited__year=2022)
         paid_cheques = Cheque.objects.filter(
-            cheque_status__name__iexact="paid", date_debited__year=2022
+            cheques_statuses__cheque_status__name__iexact="paid",
+            date_debited__year=2022,
         )
         total_amount = sum(cheque.chq_amount for cheque in all_cheques)
         paid_cheque_total_amount = sum(cheque.chq_amount for cheque in paid_cheques)
         context["total_amount"] = total_amount
         context["paid_cheque_total_amount"] = paid_cheque_total_amount
         context["form"] = ChequeAddJournalUpdateViewForm(initial={})
-        context["cheque_status_form"] = ChequeStatusUpdateViewForm(initial={})
+        context["cheque_status_form"] = ChequeStatusUpdateForm()
         return context
 
     def get_queryset(self):
@@ -427,27 +508,3 @@ class ChequeListView(LoginRequiredMixin, ListView):
             ).distinct()
         else:
             return Cheque.objects.all()
-
-
-# @login_required
-# def cheque_paid_status(request, pk):
-#     cheque = Cheque.objects.get(pk=pk)
-#     cheque.cheque_status = "P"
-#     cheque.save()
-#     cheque_status_display = cheque.get_cheque_status_display()
-#     messages.success(
-#         request, f"Cheque number {cheque.cheque_no} was {cheque_status_display}."
-#     )
-#     return redirect("cheque-list")
-
-
-# @login_required
-# def cheque_returned_status(request, pk):
-#     cheque = Cheque.objects.get(pk=pk)
-#     cheque.cheque_status = "R"
-#     cheque.save()
-#     cheque_status_display = cheque.get_cheque_status_display()
-#     messages.success(
-#         request, f"Cheque number {cheque.cheque_no} was {cheque_status_display}."
-#     )
-#     return redirect("cheque-list")
